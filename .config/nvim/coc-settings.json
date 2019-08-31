@@ -1,0 +1,8 @@
+{
+	"prettier.eslintIntegration": true,
+	"prettier.tslintIntegration": true,
+	"prettier.stylelintIntegration": true,
+	"prettier.requireConfig": true,
+	"tslint.configFile": "./tslint.json",
+	"tslint.jsEnable": true
+}
