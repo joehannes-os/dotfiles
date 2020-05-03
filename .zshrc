@@ -1,10 +1,13 @@
 export TERM="xterm-256color"
 
 # tmuxinator completion
-source ~/.bin/tmuxinator.zsh
+# source ~/.bin/tmuxinator.zsh
 
 # GO packages path
 export GOPATH=/home/joehannes/go
+
+# default web browser for stuff like ddgr, googler
+export BROWSER=/usr/bin/lynx
 
 # JAVA_HOME
 export JAVA_HOME=/usr/lib/jvm/default-java
@@ -83,7 +86,7 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern url)
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  git git-flow git-extras github git-hubflow ssh-agent compleat npm zsh-completions history history-substring-search tig copybuffer copydir copyfile dash fancy-ctrl-z sudo taskwarrior tmux tmuxinator zsh-navigation-tools zsh-autosuggestions zsh-peco-history zsh-clipboard zshmarks zsh-syntax-highlighting zsh-syntax-highlighting-filetypes zsh-select ubuntu vi-mode zsh-vimode-visual z zsh-wakatime
+  git git-flow git-extras github git-hubflow ssh-agent compleat npm zsh-completions history history-substring-search tig copybuffer copydir copyfile dash fancy-ctrl-z sudo taskwarrior tmux tmuxinator zsh-navigation-tools zsh-autosuggestions zsh-peco-history zsh-select ubuntu vi-mode zsh-vimode-visual z zsh-wakatime
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -114,11 +117,12 @@ export SSH_KEY_PATH="~/.ssh/id_rsa"
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-alias zshconfig="edit ~/.zshrc"
-alias nvimconfig="edit ~/.config/nvim/init.vim"
-alias ohmyzsh="edit ~/.oh-my-zsh"
+alias zshconfig="nvim ~/.zshrc"
+alias nvimconfig="nvim ~/.config/nvim/init.vim"
+alias ohmyzsh="nvim ~/.oh-my-zsh"
+alias ohmyterm="ohmytoggle Alacritty"
 
-alias toool="mux start toool"
+alias txq="tmuxinator stop $1"
 
 eval "$(hub alias -s)"
 
@@ -127,7 +131,7 @@ zstyle :omz:plugins:ssh-agent identities id_rsa
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-nvm use v10.16.0
+nvm use v14.0.0
 
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
 source /home/joehannes/.oh-my-git/prompt.sh
