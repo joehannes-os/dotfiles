@@ -16,6 +16,9 @@ function! BuildComposer(info)
 endfunction
 
 Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
+
+Plug 'universal-ctags/ctags'
+
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " commands
@@ -207,7 +210,7 @@ let g:vista_ctags_cmd = {
 " To enable fzf's preview window set g:vista_fzf_preview.
 " The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
 " For example:
-let g:vista#fzf_preview = ['right:15%']
+let g:vista#fzf_preview = ['right:10%']
 " Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
 let g:vista#renderer#enable_icon = 1
 
@@ -456,14 +459,26 @@ imap <m-S> <Plug>(extract-Sycle)
 nmap <silent> s <Plug>(extract-replace-normal)
 vmap <silent> s <Plug>(extract-replace-visual)
 
-Plug 'Lenovsky/nuake'
+" Plug 'Lenovsky/nuake'
 
-let g:nuake_position = 'top'
-let g:nuake_per_tab = 1
+" let g:nuake_position = 'top'
+" let g:nuake_per_tab = 1
 
-nnoremap <space>tt :Nuake<CR>
-inoremap <space>tt <C-\><C-n>:Nuake<CR>
-tnoremap <space>tt <C-\><C-n>:Nuake<CR>
+Plug 'voldikss/vim-floaterm'
+
+autocmd User Startified setlocal buflisted
+hi FloatermBorder guibg=magenta guifg=cyan
+set shell=/usr/bin/zsh
+
+let g:floaterm_height=0.9
+let g:floaterm_width=0.9
+let g:floaterm_wintype='floating'
+let g:floaterm_position='top'
+let g:floaterm_winblend=10
+
+nnoremap <space>tt :FloatermToggle<CR>
+inoremap <space>tt <C-\><C-n>:FloatermToggle<CR>
+tnoremap <space>tt <C-\><C-n>:FloatermToggle<CR>
 
 " Plug 'fmoralesc/nlanguagetool.nvim'
 Plug 'sheerun/vim-polyglot'
@@ -601,6 +616,8 @@ if has('unnamedplus')
   set clipboard^=unnamedplus
 endif
 
+set inccommand=split
+
 syntax on
 colorscheme monokai_pro
 
@@ -617,7 +634,7 @@ set nowritebackup
 set noswapfile
 set laststatus=2
 set hidden
-set cmdheight=5
+set cmdheight=2
 " You will have bad experience for diagnostic messages when it's default 4000.
 set updatetime=200
 " don't give |ins-completion-menu| messages.
@@ -639,8 +656,6 @@ augroup numbertoggle
   autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
 augroup END
 
-noremap <leader>h :<C-u>split<CR>
-noremap <leader>v :<C-u>vsplit<CR>
 noremap <space><esc> :<C-u>set relativenumber!<CR>
 
 nnoremap <C-J> <C-W><C-J>
