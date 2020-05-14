@@ -19,7 +19,20 @@ Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 
 Plug 'universal-ctags/ctags'
 
+Plug 'frazrepo/vim-rainbow'
+
+let g:rainbow_active = 1
+
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Remap for do codeAction of selected region
+function! s:cocActionsOpenFromSelected(type) abort
+  execute 'CocCommand actions.open ' . a:type
+endfunction
+xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
+nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>
+
+autocmd User CocGitStatusChange {command}
 
 " commands
 " --------
@@ -36,11 +49,13 @@ command! -nargs=0 Prettier :CocCommand prettier.formatFile
 " Show all diagnostics
 nnoremap <silent> <space>te  :<C-u>CocList diagnostics<cr>
 " Manage extensions
-nnoremap <silent> <space>tp:coc  :<C-u>CocList extensions<cr>
+nnoremap <silent> <space>tp  :<C-u>CocList extensions<cr>
 " Show commands
 nnoremap <silent> <space>th  :<C-u>CocList commands<cr>
 " Find symbol of current document
-" nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+nnoremap <silent> <space>to  :<C-u>CocList outline<cr>
+" Search snippets
+nnoremap <silent> <space>t*  :<C-u>CocList snippets<cr>
 " Search workspace symbols
 nnoremap <silent> <space>ts  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
@@ -49,6 +64,16 @@ nnoremap <silent> <space>aj  :<C-u>CocNext<CR>
 nnoremap <silent> <space>ak  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>tr  :<C-u>CocListResume<CR>
+nnoremap <silent> <space>ty  :<C-u>CocList yank<cr>
+nnoremap <silent> <space>td  :<C-u>CocList todolist<cr>
+nnoremap <silent> <space>tg  :<C-u>CocList grep<cr>
+
+" Cfg for ultisnip snippets
+let g:ultisnips_javascript = {
+\ 'keyword-spacing': 'always',
+\ 'semi': 'always',
+\ 'space-before-function-paren': 'always',
+\ }
 
 " Snippets
 " --------
@@ -185,14 +210,6 @@ let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
 " See all the avaliable executives via `:echo g:vista#executives`.
 let g:vista_default_executive = 'coc'
 
-" Set the executive for some filetypes explicitly. Use the explicit executive
-" instead of the default one for these filetypes when using `:Vista` without
-" specifying the executive.
-let g:vista_executive_for = {
-  \ 'cpp': 'vim_lsp',
-  \ 'php': 'vim_lsp',
-  \ }
-
 " Declare the command including the executable and options used to generate ctags output
 " for some certain filetypes.The file path will be appened to your custom command.
 " For example:
@@ -210,7 +227,7 @@ let g:vista_ctags_cmd = {
 " To enable fzf's preview window set g:vista_fzf_preview.
 " The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
 " For example:
-let g:vista#fzf_preview = ['right:10%']
+let g:vista_fzf_preview = ['right:15%']
 " Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
 let g:vista#renderer#enable_icon = 1
 
@@ -223,7 +240,7 @@ let g:vista#renderer#icons = {
 set statusline+=%{NearestMethodOrFunction()}
 
 " toggle structural view
-nnoremap <space>ts :Vista!!<CR>
+nnoremap <space>tv :Vista!!<CR>
 
 autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
 autocmd vimEnter * Vista
@@ -292,7 +309,7 @@ highlight link WintabsInactiveNC TabLine
 
 " Plug 'qpkorr/vim-bufkill'
 Plug 'wakatime/vim-wakatime'
-Plug 'mhinz/vim-startify'
+" Plug 'mhinz/vim-startify'
 
 Plug 'easymotion/vim-easymotion'
 
@@ -351,7 +368,7 @@ noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
 
 Plug 'jlanzarotta/bufexplorer'
 
-nnoremap <space>tb  :BufExplorerHorizontalSplit<CR>
+nnoremap <space>tb  :BufExplorer<CR>
 
 Plug 'arithran/vim-delete-hidden-buffers'
 
@@ -359,8 +376,6 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 let $FZF_DEFAULT_OPTS = '--layout=reverse'
-
-let g:fzf_layout = { 'window': 'call OpenFloatingWin()' }
 
 function! OpenFloatingWin()
 	let height = &lines - 3
@@ -372,7 +387,7 @@ function! OpenFloatingWin()
 			 \ 'row': 1,
 			 \ 'col': col + 30,
 			 \ 'width': width * 2 / 3,
-			 \ 'height': height / 2
+			 \ 'height': height / 3
 			 \ }
 
 	let buf = nvim_create_buf(v:false, v:true)
@@ -389,7 +404,9 @@ function! OpenFloatingWin()
 				 \ signcolumn=no
 endfunction
 
-nnoremap ; :GFiles<Cr>
+let g:fzf_layout = { 'window': 'call OpenFloatingWin()' }
+
+nnoremap ; :GFiles --recurse-submodules<Cr>
 
 "   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
 "   :Ag! - Start fzf in fullscreen and display the preview window above
@@ -415,50 +432,78 @@ Plug 'raimondi/delimitmate'
 " Plug 'Yggdroot/indentLine'
 Plug 'nathanaelkane/vim-indent-guides'
 
-hi IndentGuidesOdd  ctermbg=lightgrey
-hi IndentGuidesEven ctermbg=darkgrey
+hi IndentGuidesOdd  ctermbg=magenta
+hi IndentGuidesEven ctermbg=lightmagenta
 
 let g:indent_guides_enable_on_vim_startup = 1
 
 Plug 'honza/vim-snippets'
 Plug 'brooth/far.vim'
-Plug 'scrooloose/nerdcommenter'
+
+set lazyredraw
+
+" shortcut for far.vim find
+nnoremap <silent> <space>ff  :Farf<cr>
+vnoremap <silent> <space>ff  :Farf<cr>
+
+" shortcut for far.vim replace
+nnoremap <silent> <space>fr  :Farr<cr>
+vnoremap <silent> <space>fr  :Farr<cr>
+
+" Plug 'preservim/nerdcommenter'
+
+"filetype plugin on
 
 " Add spaces after comment delimiters by default
-let g:NERDSpaceDelims = 1
-" Enable trimming of trailing whitespace when uncommenting
-let g:NERDTrimTrailingWhitespace = 1
+"let g:NERDSpaceDelims = 1
 
-Plug 'arakashic/chromatica.nvim'
-Plug 'cyansprite/Extract'
+" Use compact syntax for prettified multi-line comments
+"let g:NERDCompactSexyComs = 1
+
+" Align line-wise comment delimiters flush left instead of following code indentation
+"let g:NERDDefaultAlign = 'left'
+
+" Add your own custom formats or override the defaults
+"let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }
+
+" Allow commenting and inverting empty lines (useful when commenting a region)
+"let g:NERDCommentEmptyLines = 1
+
+" Enable trimming of trailing whitespace when uncommenting
+"let g:NERDTrimTrailingWhitespace = 1
+
+" Enable NERDCommenterToggle to check all selected lines is commented or not
+"let g:NERDToggleCheckAllLines = 1
+
+" Plug 'cyansprite/Extract'
 
 " mappings for putting
-nmap p <Plug>(extract-put)
-nmap P <Plug>(extract-Put)
-
-nmap <leader>p :ExtractPin<cr>
-nmap <leader>P :ExtractUnPin<cr>
-
-" mappings for cycling
-map <m-s> <Plug>(extract-sycle)
-map <m-S> <Plug>(extract-Sycle)
-map <c-s> <Plug>(extract-cycle)
-
-" mappings for visual
-vmap p <Plug>(extract-put)
-vmap P <Plug>(extract-Put)
-
-" mappings for insert
-imap <m-v> <Plug>(extract-completeReg)
-imap <c-v> <Plug>(extract-completeList)
-imap <c-s> <Plug>(extract-cycle)
-imap <m-s> <Plug>(extract-sycle)
-imap <m-S> <Plug>(extract-Sycle)
-
-" mappings for replace
-nmap <silent> s <Plug>(extract-replace-normal)
-vmap <silent> s <Plug>(extract-replace-visual)
-
+" nmap p <Plug>(extract-put)
+" nmap P <Plug>(extract-Put)
+"
+" nmap <leader>p :ExtractPin<cr>
+" nmap <leader>P :ExtractUnPin<cr>
+"
+" " mappings for cycling
+" map <m-s> <Plug>(extract-sycle)
+" ap <m-S> <Plug>(extract-Sycle)
+" map <c-s> <Plug>(extract-cycle)
+"
+" " mappings for visual
+" vmap p <Plug>(extract-put)
+" vmap P <Plug>(extract-Put)
+"
+" " mappings for insert
+" imap <m-v> <Plug>(extract-completeReg)
+" imap <c-v> <Plug>(extract-completeList)
+" imap <c-s> <Plug>(extract-cycle)
+" imap <m-s> <Plug>(extract-sycle)
+" imap <m-S> <Plug>(extract-Sycle)
+"
+" " mappings for replace
+" nmap <silent> s <Plug>(extract-replace-normal)
+" vmap <silent> s <Plug>(extract-replace-visual)
+"
 " Plug 'Lenovsky/nuake'
 
 " let g:nuake_position = 'top'
@@ -481,17 +526,17 @@ inoremap <space>tt <C-\><C-n>:FloatermToggle<CR>
 tnoremap <space>tt <C-\><C-n>:FloatermToggle<CR>
 
 " Plug 'fmoralesc/nlanguagetool.nvim'
-Plug 'sheerun/vim-polyglot'
+" Plug 'sheerun/vim-polyglot'
 Plug 'roxma/vim-tmux-clipboard'
-Plug 'HerringtonDarkholme/yats.vim'
+" Plug 'HerringtonDarkholme/yats.vim'
 "Plug 'mhartington/nvim-typescript', { 'do': './install.sh' }
 " Plug 'autozimu/LanguageClient-neovim'
 "Plug 'jalvesaq/vimcmdline'
 " Plug 'airblade/vim-gitgutter'
-Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
+" Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 "Plug 'm00qek/nvim-contabs'
-" Plug 'tomtom/tcomment_vim'
-Plug 'rking/ag.vim'
+Plug 'tomtom/tcomment_vim'
+" Plug 'rking/ag.vim'
 Plug 'tpope/vim-fugitive'
 
 nnoremap <space>tg :<C-u>Gblame<cr>
@@ -566,27 +611,32 @@ Plug 'mattn/emmet-vim'
   " \ ]
 " \ }
 
-Plug 'severin-lemaignan/vim-minimap'
+" Plug 'severin-lemaignan/vim-minimap'
 
-autocmd vimenter * Minimap
+" autocmd vimenter * Minimap
 
-Plug 'ashisha/image.vim'
+" Plug 'ashisha/image.vim'
 Plug 'francoiscabrol/ranger.vim'
 
 let g:ranger_replace_netrw = 1 "// open ranger when vim open a directory
-let g:ranger_command_override = 'ranger --cmd "set show_hidden=true"'
+
+map <leader>f :Ranger<cr>
 
 Plug 'rbgrouleff/bclose.vim'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'tpope/vim-obsession'
-Plug 'davidhalter/jedi-vim'
+
+map <leader>sa :Obsess<cr>
+map <leader>so :Obsess!<cr>
+
+" Plug 'davidhalter/jedi-vim'
 ""Plug 'felipec/notmuch-vim'
 Plug 'mkitt/tabline.vim'
 Plug 'phanviet/vim-monokai-pro'
 " Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'ryanoasis/vim-devicons'
-Plug 'brettanomyces/nvim-editcommand'
+" Plug 'brettanomyces/nvim-editcommand'
 call plug#end()
 
 " useful functions
@@ -666,12 +716,6 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap <space>bn :enew<CR>
 nnoremap <space>bd :BD<CR>
 nnoremap <space>bt :tabnew<CR>
-nnoremap [t
-      \ :MinimapToggle<cr>
-      \ :tabprevious<cr>
-      \ :MinimapToggle<cr>
-nnoremap ]t
-      \ :MinimapToggle<cr>
-      \ :tabnext<cr>
-      \ :MinimapToggle<cr>
+nnoremap [t :tabprevious<cr>
+nnoremap ]t :tabnext<cr>
 
