@@ -13,7 +13,8 @@ export BROWSER=/usr/bin/lynx
 export JAVA_HOME=/usr/lib/jvm/default-java
 
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/.bin:/usr/local/bin:$HOME/.cargo/bin:$JAVA_HOME/bin:$PATH
+export PATH=$HOME/.linuxbrew/bin:$HOME/.local/bin:/usr/local/bin:$HOME/.cargo/bin:$JAVA_HOME/bin:$PATH
+export FPATH=$HOME/.linuxbrew/share/zsh/site-functions:$FPATH
 if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
   export FPATH=/usr/local/share/zsh/site-functions:$FPATH
 fi
@@ -86,7 +87,7 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern url)
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  git git-flow git-extras github git-hubflow ssh-agent compleat npm zsh-completions history history-substring-search tig copybuffer copydir copyfile dash fancy-ctrl-z sudo taskwarrior tmux tmuxinator zsh-navigation-tools zsh-autosuggestions zsh-peco-history zsh-select ubuntu vi-mode zsh-vimode-visual z zsh-wakatime
+  git git-flow git-extras github git-hubflow ssh-agent compleat npm zsh-completions history history-substring-search tig copybuffer copydir copyfile dash fancy-ctrl-z sudo taskwarrior tmux tmuxinator zsh-navigation-tools zsh-autosuggestions zsh-peco-history zsh-select ubuntu vi-mode zsh-vimode-visual z zsh-wakatime zsh-syntax-highlighting gpg-agent
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -117,12 +118,20 @@ export SSH_KEY_PATH="~/.ssh/id_rsa"
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-alias zshconfig="nvim ~/.zshrc"
-alias nvimconfig="nvim ~/.config/nvim/init.vim"
-alias ohmyzsh="nvim ~/.oh-my-zsh"
-alias ohmyterm="ohmytoggle Alacritty"
+alias zshcfg="nvim ~/.zshrc"
+alias nvimcfg="nvim ~/.config/nvim/init.vim"
+alias ohmyzshcfg="nvim ~/.oh-my-zsh"
+alias ohmybugcfg="nvim ~/.config/bugwarrior/bugwarriorrc"
+alias ohmytmuxcfg="nvim ~/.tmux.conf.local"
 
-alias txq="tmuxinator stop $1"
+
+txq() {
+	tmuxinator stop $1;
+}
+
+~() {
+	cd ~/.local/$1/
+}
 
 eval "$(hub alias -s)"
 
