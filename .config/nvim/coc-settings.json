@@ -4,5 +4,7 @@
 	"prettier.stylelintIntegration": true,
 	"prettier.requireConfig": true,
 	"tslint.configFile": "./tslint.json",
-	"tslint.jsEnable": true
+  "tslint.jsEnable": true,
+  "git.enableGutters": true,
+	"snippets.userSnippetsDirectory": "~/.local/snippets"
 }

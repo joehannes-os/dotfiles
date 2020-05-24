@@ -78,9 +78,9 @@ let g:ultisnips_javascript = {
 " Snippets
 " --------
 " Use <C-l> for trigger snippet expand.
-imap <C-<cr>> <Plug>(coc-snippets-expand)
+imap <c-<cr>> <Plug>(coc-snippets-expand)
 " Use <C-j> for select text for visual placeholder of snippet.
-vmap <C-<space>> <Plug>(coc-snippets-select)
+vmap <space><space> <Plug>(coc-snippets-select)
 " Use <C-j> for jump to next placeholder, it's default of coc.nvim
 let g:coc_snippet_next = '<c-j>'
 " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
@@ -88,16 +88,16 @@ let g:coc_snippet_prev = '<c-k>'
 
 inoremap <silent><expr> <C-TAB>
       \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#expandableOrJumpable() ? "\<c-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<tab>" :
       \ coc#refresh()
 
 " RangeSelections
 " ---------------
 " Use <tab> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-nmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
+nmap <silent> <leader><TAB> <Plug>(coc-range-select)
+xmap <silent> <leader><TAB> <Plug>(coc-range-select)
+xmap <silent> <leader><S-TAB> <Plug>(coc-range-select-backword)
 
 " CodeActions
 " -----------
@@ -166,11 +166,11 @@ endfunction
 nmap [g <Plug>(coc-git-prevchunk)
 nmap ]g <Plug>(coc-git-nextchunk)
 " show chunk diff at current position
-nmap <space>gd <Plug>(coc-git-chunkinfo)
+nmap <space>Gd <Plug>(coc-git-chunkinfo)
 " show commit contains current position
-nmap <space>gc <Plug>(coc-git-commit)
+nmap <space>Gc <Plug>(coc-git-commit)
 
-nnoremap <silent> <space>gs  :<C-u>CocList --normal gstatus<CR>
+nnoremap <silent> <space>Gs  :<C-u>CocList --normal gstatus<CR>
 
 " completion specific stuff
 " -------------------------
@@ -190,7 +190,7 @@ inoremap <silent><expr> <TAB>
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
+"
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
 " Coc only does snippet and additional edit on confirm.
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
@@ -227,7 +227,7 @@ let g:vista_ctags_cmd = {
 " To enable fzf's preview window set g:vista_fzf_preview.
 " The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
 " For example:
-let g:vista_fzf_preview = ['right:15%']
+let g:vista_fzf_preview = ['right:12%']
 " Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
 let g:vista#renderer#enable_icon = 1
 
@@ -353,18 +353,6 @@ noremap <silent><expr> /  incsearch#go(<SID>incsearch_config())
 noremap <silent><expr> ?  incsearch#go(<SID>incsearch_config({'command': '?'}))
 noremap <silent><expr> g/ incsearch#go(<SID>incsearch_config({'is_stay': 1}))
 
-function! s:config_easyfuzzymotion(...) abort
-  return extend(copy({
-  \   'converters': [incsearch#config#fuzzyword#converter()],
-  \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
-  \   'keymap': {"\<CR>": '<Over>(easymotion)'},
-  \   'is_expr': 0,
-  \   'is_stay': 1
-  \ }), get(a:, 1, {}))
-endfunction
-
-noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
-
 
 Plug 'jlanzarotta/bufexplorer'
 
@@ -429,7 +417,7 @@ autocmd! User FzfStatusLine call <SID>fzf_statusline()
 Plug 'fszymanski/fzf-gitignore', {'do': ':UpdateRemotePlugins'}
 
 Plug 'raimondi/delimitmate'
-" Plug 'Yggdroot/indentLine'
+
 Plug 'nathanaelkane/vim-indent-guides'
 
 hi IndentGuidesOdd  ctermbg=magenta
@@ -540,7 +528,7 @@ Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-fugitive'
 
 nnoremap <space>tg :<C-u>Gblame<cr>
-Plug 'Chun-Yang/vim-action-ag'
+" Plug 'Chun-Yang/vim-action-ag'
 Plug 'editorconfig/editorconfig-vim'
 
 Plug 'itchyny/lightline.vim'
@@ -587,11 +575,15 @@ let g:lightline.tabline = {
 \ }
 
 "Plug 'maximbaz/lightline-ale'
-Plug 'terryma/vim-multiple-cursors'
+" Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'mattn/emmet-vim'
+
+let g:user_emmet_leader_key='<c-z>'
+
 "Plug 'w0rp/ale'
 "Plug 'vim-airline/vim-airline'
 "Plug 'vim-airline/vim-airline-themes'
@@ -616,6 +608,7 @@ Plug 'mattn/emmet-vim'
 " autocmd vimenter * Minimap
 
 " Plug 'ashisha/image.vim'
+
 Plug 'francoiscabrol/ranger.vim'
 
 let g:ranger_replace_netrw = 1 "// open ranger when vim open a directory
