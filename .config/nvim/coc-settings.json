@@ -6,5 +6,10 @@
 	"tslint.configFile": "./tslint.json",
   "tslint.jsEnable": true,
   "git.enableGutters": true,
-	"snippets.userSnippetsDirectory": "~/.local/snippets"
+	"snippets.userSnippetsDirectory": "~/.local/snippets",
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "wxss.validate": false,
+	"stylelintplus.autoFixOnFormat": true
 }

@@ -25,6 +25,54 @@ let g:rainbow_active = 1
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+let g:coc_global_extensions = [
+			\'coc-yank',
+			\'coc-yaml',
+			\'coc-xml',
+			\'coc-webpack',
+			\'coc-utils',
+			\'coc-ultisnips',
+			\'coc-tsserver',
+			\'coc-tslint-plugin',
+			\'coc-translator',
+			\'coc-todolist',
+			\'coc-tag',
+			\'coc-tabnine',
+			\'coc-syntax',
+			\'coc-svg',
+			\'coc-stylelintplus',
+			\'coc-stylelint',
+			\'coc-styled-components',
+			\'coc-spell-checker',
+			\'coc-snippets',
+			\'coc-scssmodules',
+			\'coc-prettier',
+			\'coc-pairs',
+			\'coc-neosnippet',
+			\'coc-markdownlint',
+			\'coc-lists',
+			\'coc-json',
+			\'coc-jira-complete',
+			\'coc-html',
+			\'coc-highlight',
+			\'coc-gitignore',
+			\'coc-github',
+			\'coc-git',
+			\'coc-flow',
+			\'coc-eslint',
+			\'coc-emoji',
+			\'coc-emmet',
+			\'coc-dictionary',
+			\'coc-diagnostic',
+			\'coc-cssmodules',
+			\'coc-css',
+			\'coc-css-block-comments',
+			\'coc-browser',
+			\'coc-bookmark',
+			\'coc-angular',
+			\'coc-actions'
+			\]
+
 " Remap for do codeAction of selected region
 function! s:cocActionsOpenFromSelected(type) abort
   execute 'CocCommand actions.open ' . a:type
@@ -514,9 +562,9 @@ inoremap <space>tt <C-\><C-n>:FloatermToggle<CR>
 tnoremap <space>tt <C-\><C-n>:FloatermToggle<CR>
 
 " Plug 'fmoralesc/nlanguagetool.nvim'
-" Plug 'sheerun/vim-polyglot'
+Plug 'sheerun/vim-polyglot'
 Plug 'roxma/vim-tmux-clipboard'
-" Plug 'HerringtonDarkholme/yats.vim'
+Plug 'HerringtonDarkholme/yats.vim'
 "Plug 'mhartington/nvim-typescript', { 'do': './install.sh' }
 " Plug 'autozimu/LanguageClient-neovim'
 "Plug 'jalvesaq/vimcmdline'
