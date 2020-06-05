@@ -1,5 +1,9 @@
 call plug#begin()
 
+Plug 'git-time-metric/gtm-vim-plugin'
+
+let g:gtm_plugin_status_enabled = 1
+
 Plug 'fergdev/vim-cursor-hist'
 nnoremap <leader>j :call g:CursorHistForward()<CR>
 nnoremap <leader>k :call g:CursorHistBack()<CR>
@@ -457,7 +461,7 @@ function! s:fzf_statusline()
   highlight fzf1 ctermfg=161 ctermbg=251
   highlight fzf2 ctermfg=23 ctermbg=251
   highlight fzf3 ctermfg=237 ctermbg=251
-  setlocal statusline=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
+  setlocal statusline+=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
 endfunction
 
 autocmd! User FzfStatusLine call <SID>fzf_statusline()
@@ -717,7 +721,8 @@ set ruler
 set number relativenumber
 set termguicolors
 set guifont=Hack\ NF
-set statusline^=%{get(g:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}%{StatusDiagnostic()}
+set statusline+=%{get(g:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}%{StatusDiagnostic()}
+set statusline+=%{exists('*GTMStatusline')?'['.GTMStatusline().']':''}\ %<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 set showtabline=2  " Show tabline
 set directory=/tmp
 set nobackup
@@ -725,7 +730,7 @@ set nowritebackup
 set noswapfile
 set laststatus=2
 set hidden
-set cmdheight=2
+set cmdheight=1
 " You will have bad experience for diagnostic messages when it's default 4000.
 set updatetime=200
 " don't give |ins-completion-menu| messages.
