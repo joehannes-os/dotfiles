@@ -118,7 +118,7 @@ nnoremap <silent> <space>ak  :<C-u>CocPrev<CR>
 nnoremap <silent> <space>tr  :<C-u>CocListResume<CR>
 nnoremap <silent> <space>ty  :<C-u>CocList yank<cr>
 nnoremap <silent> <space>td  :<C-u>CocList todolist<cr>
-nnoremap <silent> <space>tg  :<C-u>CocList grep<cr>
+nnoremap <silent> <space>tf  :<C-u>CocList grep<cr>
 
 " Cfg for ultisnip snippets
 let g:ultisnips_javascript = {
@@ -472,8 +472,8 @@ Plug 'raimondi/delimitmate'
 
 Plug 'nathanaelkane/vim-indent-guides'
 
-hi IndentGuidesOdd  ctermbg=magenta
-hi IndentGuidesEven ctermbg=lightmagenta
+hi IndentGuidesOdd  ctermbg=lightgrey
+hi IndentGuidesEven ctermbg=darkgrey
 
 let g:indent_guides_enable_on_vim_startup = 1
 
