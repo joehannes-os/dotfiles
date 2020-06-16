@@ -4,6 +4,10 @@ Plug 'git-time-metric/gtm-vim-plugin'
 
 let g:gtm_plugin_status_enabled = 1
 
+Plug 'stephenway/postcss.vim'
+
+Plug 'hhsnopek/vim-sugarss'
+
 Plug 'fergdev/vim-cursor-hist'
 nnoremap <leader>j :call g:CursorHistForward()<CR>
 nnoremap <leader>k :call g:CursorHistBack()<CR>
@@ -272,6 +276,7 @@ let g:vista_ctags_cmd = {
 			\ 'typescript': 'tags',
 			\ 'typescriptreact': 'tags',
 			\ 'typescript.tsx': 'tags',
+      \ 'css': 'tags',
 			\ 'scss': 'tags',
 			\ 'sass': 'tags',
 			\ }

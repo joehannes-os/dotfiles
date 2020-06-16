@@ -1,7 +1,10 @@
-export TERM="xterm-256color"
+export TERM="screen-256color"
 
 # tmuxinator completion
-# source ~/.bin/tmuxinator.zsh
+source ~/.local/bin/tmuxinator.zsh
+
+# gtm plugin
+source ~/.local/bin/gtm-plugin.sh
 
 # GO packages path
 export GOPATH=/home/joehannes/go
@@ -120,10 +123,18 @@ export SSH_KEY_PATH="~/.ssh/id_rsa"
 # Example aliases
 alias zshcfg="nvim ~/.zshrc"
 alias nvimcfg="nvim ~/.config/nvim/init.vim"
-alias ohmyzshcfg="nvim ~/.oh-my-zsh"
 alias ohmybugcfg="nvim ~/.config/bugwarrior/bugwarriorrc"
 alias ohmytmuxcfg="nvim ~/.tmux.conf.local"
+alias ohmymux="txs regular"
+alias ohmymutt="nvim ~/.neomuttrc"
 
+i() {
+  sudo apt-get install $1;
+}
+
+s() {
+  apt search $1;
+}
 
 txq() {
 	tmuxinator stop $1;
