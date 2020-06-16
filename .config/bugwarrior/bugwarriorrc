@@ -3,8 +3,8 @@
 # Here you define a comma separated list of targets.  Each of them must have a
 # section below determining their properties, how to query them, etc.  The name
 # is just a symbol, and doesn't have any functional importance.
-targets = joehannes_github
-#, joehannes_github ... not working due to 2-factor-auth
+targets = github_manual-of-life, github_prudencss, github_joehannes
+#, github_manual-of-life ... not working due to 2-factor-auth
 
 # If unspecified, the default taskwarrior config will be used.
 #taskrc = /path/to/.taskrc
@@ -70,10 +70,41 @@ backend = gobject
 # task_crud_sticky = True
 only_on_new_tasks = True
 
-[joehannes_github]
+[github_joehannes]
 service = github
 github.default_priority = H
-github.add_tags = github
+github.add_tags = github,joehannes
+
+# This specifies that we should pull issues from repositories belonging
+# to the 'ralphbean' github account.  See the note below about
+# 'github.username' and 'github.login'.  They are different, and you need
+# both.
+github.username = joehannes
+
+# I want taskwarrior to include issues from all my repos, except these
+# two because they're spammy or something.
+# github.exclude_repos = project_bar,project_baz
+# github.exclude_repos = bambus.landing.june,bambus.landing2.june
+
+# Working with a large number of projects, instead of excluding most of them I
+# can also simply include just a limited set.
+# github.include_repos = manual-of-life
+
+# Note that login and username can be different:  I can login as me, but
+# scrape issues from an organization's repos.
+#
+# - 'github.login' is the username you ask bugwarrior to
+#   login as.  Set it to your account.
+# - 'github.username' is the github entity you want to pull
+#   issues for.  It could be you, or some other user entirely.
+github.login = joehannes
+github.password = @oracle:use_keyring
+
+
+[github_manual-of-life]
+service = github
+github.default_priority = H
+github.add_tags = github,manual-of-life
 
 # This specifies that we should pull issues from repositories belonging
 # to the 'ralphbean' github account.  See the note below about
@@ -99,6 +130,38 @@ github.username = manual-of-life
 #   issues for.  It could be you, or some other user entirely.
 github.login = joehannes
 github.password = @oracle:use_keyring
+
+[github_prudencss]
+service = github
+github.default_priority = H
+github.add_tags = github,prudencss
+
+# This specifies that we should pull issues from repositories belonging
+# to the 'ralphbean' github account.  See the note below about
+# 'github.username' and 'github.login'.  They are different, and you need
+# both.
+github.username = prudencss
+
+# I want taskwarrior to include issues from all my repos, except these
+# two because they're spammy or something.
+# github.exclude_repos = project_bar,project_baz
+# github.exclude_repos = bambus.landing.june,bambus.landing2.june
+
+# Working with a large number of projects, instead of excluding most of them I
+# can also simply include just a limited set.
+# github.include_repos = prudencss
+
+# Note that login and username can be different:  I can login as me, but
+# scrape issues from an organization's repos.
+#
+# - 'github.login' is the username you ask bugwarrior to
+#   login as.  Set it to your account.
+# - 'github.username' is the github entity you want to pull
+#   issues for.  It could be you, or some other user entirely.
+github.login = joehannes
+github.password = @oracle:use_keyring
+
+
 
 #[bambus_jira]
 #service = jira
