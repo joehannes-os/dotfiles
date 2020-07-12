@@ -1,5 +1,14 @@
 call plug#begin()
 
+Plug 'nightsense/night-and-day'
+
+let g:nd_themes = [
+  \ ['sunrise+0', 'gruvbox', 'light' ],
+  \ ['sunset+0', 'monokai_pro', 'dark' ],
+  \ ]
+let g:nd_latitude = '50'
+let g:nd_timeshift = '63'
+
 Plug 'git-time-metric/gtm-vim-plugin'
 
 let g:gtm_plugin_status_enabled = 1
@@ -683,6 +692,8 @@ map <leader>so :Obsess!<cr>
 ""Plug 'felipec/notmuch-vim'
 Plug 'mkitt/tabline.vim'
 Plug 'phanviet/vim-monokai-pro'
+Plug 'hzchirs/vim-material'
+Plug 'morhetz/gruvbox'
 " Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'ryanoasis/vim-devicons'
@@ -755,6 +766,10 @@ augroup numbertoggle
   autocmd!
   autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
   autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+augroup END
+
+augroup filetypedetect
+  au! BufNewFile,BufFilePre,BufRead,BufReadPost *.sss.md set filetype=sugarss
 augroup END
 
 noremap <space><esc> :<C-u>set relativenumber!<CR>
