@@ -1,11 +1,28 @@
 call plug#begin()
 
+Plug 'itchyny/calendar.vim'
+
+let g:calendar_google_calendar = 1
+let g:calendar_google_task = 1
+
+source ~/.cache/calendar.vim/credentials.vim
+
+nnoremap <leader>C :Calendar -view=day -position=left -split=vertical -width=30<CR>
+
+" Plug 'RRethy/vim-illuminate.git'
+" Possibly this repo needs installation/cloning manually
+" Time in milliseconds (default 250)
+let g:Illuminate_delay = 100
+let g:Illuminate_highlightUnderCursor = 0
+
+hi link illuminatedWord Visual
+
 Plug 'nightsense/night-and-day'
 
 let g:nd_themes = [
-  \ ['sunrise+0', 'gruvbox', 'light' ],
-  \ ['sunset+0', 'monokai_pro', 'dark' ],
-  \ ]
+  \ ['sunrise+0', 'space_vim_theme', 'light' ],
+  \ ['sunset+0', 'sonokai', 'andromeda' ],
+\ ]
 let g:nd_latitude = '50'
 let g:nd_timeshift = '63'
 
@@ -13,9 +30,9 @@ Plug 'git-time-metric/gtm-vim-plugin'
 
 let g:gtm_plugin_status_enabled = 1
 
-Plug 'stephenway/postcss.vim'
-
-Plug 'hhsnopek/vim-sugarss'
+" don't need postcss for now
+" Plug 'stephenway/postcss.vim'
+" Plug 'hhsnopek/vim-sugarss'
 
 Plug 'fergdev/vim-cursor-hist'
 nnoremap <leader>j :call g:CursorHistForward()<CR>
@@ -132,6 +149,11 @@ nnoremap <silent> <space>tr  :<C-u>CocListResume<CR>
 nnoremap <silent> <space>ty  :<C-u>CocList yank<cr>
 nnoremap <silent> <space>td  :<C-u>CocList todolist<cr>
 nnoremap <silent> <space>tf  :<C-u>CocList grep<cr>
+nnoremap <silent> <leader>s :CocCommand session.save<CR>
+nnoremap <silent> <leader>o :CocCommand session.load<CR>
+nnoremap <silent> <space>mt :CocCommand bookmark.toggle<CR>
+nnoremap <silent> <space>mp :CocCommand bookmark.prev<CR>
+nnoremap <silent> <space>mn :CocCommand bookmark.next<CR>
 
 " Cfg for ultisnip snippets
 let g:ultisnips_javascript = {
@@ -302,8 +324,6 @@ let g:vista#renderer#icons = {
 \   "function": "\uf794",
 \   "variable": "\uf71b",
 \  }
-
-set statusline+=%{NearestMethodOrFunction()}
 
 " toggle structural view
 nnoremap <space>tv :Vista!!<CR>
@@ -495,6 +515,8 @@ Plug 'honza/vim-snippets'
 Plug 'brooth/far.vim'
 
 set lazyredraw
+let g:far#enable_undo=1
+let g:far#source = 'rg'
 
 " shortcut for far.vim find
 nnoremap <silent> <space>ff  :Farf<cr>
@@ -645,7 +667,10 @@ let g:lightline.tabline = {
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-surround'
+Plug 'tpope/vim-sleuth'
+" replaced vim-surround with vim-sandwich
+" Plug 'tpope/vim-surround'
+Plug 'machakann/vim-sandwich'
 Plug 'mattn/emmet-vim'
 
 let g:user_emmet_leader_key='<c-z>'
@@ -685,15 +710,22 @@ Plug 'rbgrouleff/bclose.vim'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'tpope/vim-obsession'
 
-map <leader>sa :Obsess<cr>
-map <leader>so :Obsess!<cr>
+map <leader>Ss :Obsess<cr>
+map <leader>So :Obsess!<cr>
 
 " Plug 'davidhalter/jedi-vim'
 ""Plug 'felipec/notmuch-vim'
 Plug 'mkitt/tabline.vim'
+Plug 'ayu-theme/ayu-vim'
 Plug 'phanviet/vim-monokai-pro'
+Plug 'sainnhe/sonokai'
+
+let g:sonokai_enable_italic = 1
+let g:sonokai_disable_italic_comment = 1
+
 Plug 'hzchirs/vim-material'
 Plug 'morhetz/gruvbox'
+Plug 'liuchengxu/space-vim-theme'
 " Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'ryanoasis/vim-devicons'
@@ -717,6 +749,19 @@ function! StatusDiagnostic() abort
 	return join(msgs, ' ') . ' ' . get(g:, 'coc_status', '')
 endfunction
 
+function! WinMove(key)
+    let t:curwin = winnr()
+    exec "wincmd ".a:key
+    if (t:curwin == winnr())
+        if (match(a:key,'[jk]'))
+            wincmd v
+        else
+            wincmd s
+        endif
+        exec "wincmd ".a:key
+    endif
+endfunction
+
 " non plugin specific conf
 " ------------------------
 let mapleader = ","
@@ -730,15 +775,20 @@ endif
 set inccommand=split
 
 syntax on
-colorscheme monokai_pro
+" nightandday-theme plugin takes care of this
+" colorscheme monokai_pro
 
 set rtp+=/home/joehannes/.config/nvim/gitted/tabnine-vim
 set ruler
 set number relativenumber
 set termguicolors
 set guifont=Hack\ NF
-set statusline+=%{get(g:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}%{StatusDiagnostic()}
-set statusline+=%{exists('*GTMStatusline')?'['.GTMStatusline().']':''}\ %<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+" too many statusline items
+" set statusline+=%{get(g:,'coc_git_status','')}
+" set statusline+=%{get(b:,'coc_git_blame','')}
+" set statusline+=%{StatusDiagnostic()}%{exists('*GTMStatusline')?'['.GTMStatusline().']':''}\ %<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+" set statusline+=%{NearestMethodOrFunction()}
+
 set showtabline=2  " Show tabline
 set directory=/tmp
 set nobackup
@@ -774,10 +824,10 @@ augroup END
 
 noremap <space><esc> :<C-u>set relativenumber!<CR>
 
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+nnoremap <silent> <C-h> :call WinMove('h')<CR>
+nnoremap <silent> <C-j> :call WinMove('j')<CR>
+nnoremap <silent> <C-k> :call WinMove('k')<CR>
+nnoremap <silent> <C-l> :call WinMove('l')<CR>
 
 nnoremap <space>bn :enew<CR>
 nnoremap <space>bd :BD<CR>
