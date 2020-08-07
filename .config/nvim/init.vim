@@ -20,7 +20,7 @@ hi link illuminatedWord Visual
 Plug 'nightsense/night-and-day'
 
 let g:nd_themes = [
-  \ ['sunrise+0', 'space_vim_theme', 'light' ],
+  \ ['sunrise+0', 'space_vim_theme', 'dark' ],
   \ ['sunset+0', 'sonokai', 'andromeda' ],
 \ ]
 let g:nd_latitude = '50'
