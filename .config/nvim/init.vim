@@ -784,8 +784,8 @@ set number relativenumber
 set termguicolors
 set guifont=Hack\ NF
 " too many statusline items
-" set statusline+=%{get(g:,'coc_git_status','')}
-" set statusline+=%{get(b:,'coc_git_blame','')}
+set statusline+=%{get(g:,'coc_git_status','')}
+set statusline+=%{get(b:,'coc_git_blame','')}
 " set statusline+=%{StatusDiagnostic()}%{exists('*GTMStatusline')?'['.GTMStatusline().']':''}\ %<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 " set statusline+=%{NearestMethodOrFunction()}
 
