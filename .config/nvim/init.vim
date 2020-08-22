@@ -1,4 +1,36 @@
 call plug#begin()
+Plug 'junegunn/goyo.vim'
+
+function! s:goyo_enter()
+  if executable('tmux') && strlen($TMUX)
+    silent !tmux set status off
+    silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+  endif
+  set noshowmode
+  set noshowcmd
+  set scrolloff=999
+  Vista!!
+endfunction
+
+function! s:goyo_leave()
+  if executable('tmux') && strlen($TMUX)
+    silent !tmux set status on
+    silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+  endif
+  set showmode
+  set showcmd
+  set scrolloff=5
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
+
+nnoremap <leader><space> :Goyo<CR>
+nnoremap <leader> <C-w>
+nnoremap <leader>J <C-w>+
+nnoremap <leader>K <C-w>-
+nnoremap <leader>L <C-w>>
+nnoremap <leader>H <C-w>\<>
 
 Plug 'itchyny/calendar.vim'
 
@@ -122,6 +154,7 @@ autocmd User CocGitStatusChange {command}
 command! -nargs=0 Format :call CocAction('format')
 " Use `:Fold` to fold current buffer
 command! -nargs=? Fold :call CocAction('fold', <f-args>)
+command! -nargs=? Unfold :call CocAction('unfold', <f-args>)
 " use `:OR` for organize import of current buffer
 command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
 " use :Prettier to format file using prettier
@@ -218,6 +251,7 @@ augroup end
 
 nnoremap <space>rp  :Prettier<cr>
 nnoremap <leader>.  :Fold<cr>
+nnoremap <leader>,  :Unfold<cr>
 xmap <space>rs  <Plug>(coc-format-selected)
 nmap <space>rs  <Plug>(coc-format-selected)
 
