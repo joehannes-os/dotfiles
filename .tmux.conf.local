@@ -70,7 +70,7 @@ tmux_conf_theme_pane_indicator='#00afff'                # light blue
 tmux_conf_theme_pane_active_indicator='#00afff'         # light blue
 
 # status line style
-tmux_conf_theme_message_fg='#000000'                    # black
+tmux_conf_theme_message_fg='#000000'
 tmux_conf_theme_message_bg='#ffff00'                    # yellow
 tmux_conf_theme_message_attr='bold'
 
@@ -189,7 +189,7 @@ tmux_conf_theme_status_left_attr='bold,none,none'
 
 # status right style
 tmux_conf_theme_status_right_fg='#8a8a8a,#e4e4e4,#000000' # light gray, white, black
-tmux_conf_theme_status_right_bg='#080808,#d70000,#e4e4e4' # dark gray, red, white
+tmux_conf_theme_status_right_bg='#341942,#d70000,#e4e4e4' # dark gray, red, white
 tmux_conf_theme_status_right_attr='none,none,bold'
 
 # pairing indicator
@@ -307,6 +307,10 @@ set -g @plugin 'tmux-plugins/tpm'
 # set -g @plugin 'wfxr/tmux-power'
 #
 # set -g @tmux_power_theme '#ff00ff'
+
+# tmux atom onedark theme
+set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
+set -g @plugin 'sei40kr/tmux-onedark'
 
 # tmux browser open
 set -g @plugin 'wfxr/tmux-fzf-url'
