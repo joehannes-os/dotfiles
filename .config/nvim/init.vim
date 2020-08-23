@@ -1,4 +1,31 @@
 call plug#begin()
+
+Plug 'rhysd/reply.vim', { 'on': ['Repl', 'ReplAuto'] }
+
+let g:reply_repls = {
+\   'javascript': ['node'],
+\   'typescript': ['tsc'],
+\   'javascriptreact': ['node'],
+\   'typescriptreact': ['tsc']
+\ }
+
+vnoremap <space>tR :'<,'>Repl<CR>
+
+Plug 'diepm/vim-rest-console'
+
+let g:vrc_curl_opts = {
+  \ '--connect-timeout' : 10,
+  \ '-L': '',
+  \ '-i': '',
+  \ '--max-time': 60,
+  \ '--ipv4': '',
+  \ '-k': '',
+\}
+" \ '-b': '/path/to/cookie', \ '-c': '/path/to/cookie',
+
+nnoremap <leader>A :edit ~/.local/snippets/vim.rest<CR>
+nnoremap <leader><cr> :call VrcQuery()<CR>
+
 Plug 'junegunn/goyo.vim'
 
 function! s:goyo_enter()
@@ -9,7 +36,6 @@ function! s:goyo_enter()
   set noshowmode
   set noshowcmd
   set scrolloff=999
-  Vista!!
 endfunction
 
 function! s:goyo_leave()
@@ -53,7 +79,7 @@ Plug 'nightsense/night-and-day'
 
 let g:nd_themes = [
   \ ['sunrise+0', 'space_vim_theme', 'dark' ],
-  \ ['sunset+0', 'sonokai', 'andromeda' ],
+  \ ['sunset+0', 'molokai', '' ],
 \ ]
 let g:nd_latitude = '50'
 let g:nd_timeshift = '63'
@@ -251,7 +277,6 @@ augroup end
 
 nnoremap <space>rp  :Prettier<cr>
 nnoremap <leader>.  :Fold<cr>
-nnoremap <leader>,  :Unfold<cr>
 xmap <space>rs  <Plug>(coc-format-selected)
 nmap <space>rs  <Plug>(coc-format-selected)
 
@@ -362,8 +387,8 @@ let g:vista#renderer#icons = {
 " toggle structural view
 nnoremap <space>tv :Vista!!<CR>
 
-autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
-autocmd vimEnter * Vista
+" autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+" autocmd vimEnter * Vista
 
 Plug 'zefei/vim-wintabs'
 
@@ -653,48 +678,87 @@ nnoremap <space>tg :<C-u>Gblame<cr>
 " Plug 'Chun-Yang/vim-action-ag'
 Plug 'editorconfig/editorconfig-vim'
 
-Plug 'itchyny/lightline.vim'
+Plug 'rbong/vim-crystalline'
 
-autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+function! StatusLine(current, width)
+  let l:s = ''
 
-function! LightlineGitBlame() abort
-  let blame = get(b:, 'coc_git_blame', '')
-  " return blame
-  return winwidth(0) > 120 ? blame : ''
+  if a:current
+    let l:s .= crystalline#mode() . crystalline#right_mode_sep('')
+  else
+    let l:s .= '%#CrystallineInactive#'
+  endif
+  let l:s .= ' %f%h%w%m%r '
+  if a:current
+    let l:s .= crystalline#right_sep('', 'Fill') . ' %{fugitive#head()}' . "%{get(g:,'coc_git_status','')}" . ' %{get(b:,"coc_git_blame","")}' . "%{NearestMethodOrFunction()}"
+  endif
+
+  let l:s .= '%='
+  if a:current
+    let l:s .= crystalline#left_sep('', 'Fill') . "%{StatusDiagnostic()}%{exists('*GTMStatusline')?'['.GTMStatusline().']':''}" . ' %{&paste ?"PASTE ":""}%{&spell?"SPELL ":""}'
+    let l:s .= crystalline#left_mode_sep('')
+  endif
+  if a:width > 80
+    let l:s .= ' %{&ft}[%{&fenc!=#""?&fenc:&enc}][%{&ff}] %l/%L %c%V %P '
+  else
+    let l:s .= ' '
+  endif
+
+  return l:s
 endfunction
 
-let g:lightline = {
-  \ 'active': {
-  \   'left': [
-  \     [ 'mode', 'paste'],
-  \     [ 'filename', 'method' ]
-  \   ],
-  \   'right':[
-  \     [ 'filetype', 'fileencoding', 'lineinfo', 'percent'],
-  \     [ 'git', 'blame', 'diagnostic', 'cocstatus' ],
-  \     [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]
-  \   ],
-  \ },
-  \ 'component_function': {
-  \   'blame': 'LightlineGitBlame',
-	\		'cocstatus': 'coc#status',
-  \   'method': 'NearestMethodOrFunction',
-	\   'colorscheme': 'powerline'
-	\ }
-\ }
+function! TabLine()
+  let l:vimlabel = has('nvim') ?  ' NVIM ' : ' VIM '
+  return crystalline#bufferline(2, len(l:vimlabel), 1) . '%=%#CrystallineTab# ' . l:vimlabel
+endfunction
 
-let g:lightline.separator = {
-\   'left': '', 'right': ''
-\}
+let g:crystalline_enable_sep = 1
+let g:crystalline_statusline_fn = 'StatusLine'
+let g:crystalline_tabline_fn = 'TabLine'
+let g:crystalline_theme = 'molokai'
 
-let g:lightline.subseparator = {
-\   'left': '', 'right': ''
-\}
+"Plug 'itchyny/lightline.vim'
 
-let g:lightline.tabline = {
-\   'left': [ ['tabs'] ],
-\   'right': [ ['close'] ]
-\ }
+" autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+"
+" function! LightlineGitBlame() abort
+"   let blame = get(b:, 'coc_git_blame', '')
+"   " return blame
+"   return winwidth(0) > 120 ? blame : ''
+" endfunction
+"
+" let g:lightline = {
+"   \ 'active': {
+"   \   'left': [
+"   \     [ 'mode', 'paste'],
+"   \     [ 'filename', 'method' ]
+"   \   ],
+"   \   'right':[
+"   \     [ 'filetype', 'fileencoding', 'lineinfo', 'percent'],
+"   \     [ 'git', 'blame', 'diagnostic', 'cocstatus' ],
+"   \     [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]
+"   \   ],
+"   \ },
+"   \ 'component_function': {
+"   \   'blame': 'LightlineGitBlame',
+" 	\		'cocstatus': 'coc#status',
+"   \   'method': 'NearestMethodOrFunction',
+" 	\   'colorscheme': 'powerline'
+" 	\ }
+" \ }
+"
+" let g:lightline.separator = {
+" \   'left': '', 'right': ''
+" \}
+"
+" let g:lightline.subseparator = {
+" \   'left': '', 'right': ''
+" \}
+"
+" let g:lightline.tabline = {
+" \   'left': [ ['tabs'] ],
+" \   'right': [ ['close'] ]
+" \ }
 
 "Plug 'maximbaz/lightline-ale'
 " Plug 'terryma/vim-multiple-cursors'
@@ -712,21 +776,24 @@ let g:user_emmet_leader_key='<c-z>'
 "Plug 'w0rp/ale'
 "Plug 'vim-airline/vim-airline'
 "Plug 'vim-airline/vim-airline-themes'
-" Plug 'majutsushi/tagbar'
 
-" let g:tagbar_type_typescript = {
-  " \ 'ctagstype': 'typescript',
-  " \ 'kinds': [
-    " \ 'c:classes',
-    " \ 'n:modules',
-    " \ 'f:functions',
-    " \ 'v:variables',
-    " \ 'v:varlambdas',
-    " \ 'm:members',
-    " \ 'i:interfaces',
-    " \ 'e:enums',
-  " \ ]
-" \ }
+Plug 'majutsushi/tagbar'
+
+let g:tagbar_type_typescript = {
+  \ 'ctagstype': 'typescript',
+  \ 'kinds': [
+    \ 'c:classes',
+    \ 'n:modules',
+    \ 'f:functions',
+    \ 'v:variables',
+    \ 'v:varlambdas',
+    \ 'm:members',
+    \ 'i:interfaces',
+    \ 'e:enums',
+  \ ]
+\ }
+
+nnoremap <leader>t :TagbarToggle<CR>
 
 " Plug 'severin-lemaignan/vim-minimap'
 
@@ -752,10 +819,12 @@ map <leader>So :Obsess!<cr>
 Plug 'mkitt/tabline.vim'
 Plug 'ayu-theme/ayu-vim'
 Plug 'phanviet/vim-monokai-pro'
-Plug 'sainnhe/sonokai'
+Plug 'tomasr/molokai'
 
-let g:sonokai_enable_italic = 1
-let g:sonokai_disable_italic_comment = 1
+" Plug 'sainnhe/sonokai'
+
+" let g:sonokai_enable_italic = 1
+" let g:sonokai_disable_italic_comment = 1
 
 Plug 'hzchirs/vim-material'
 Plug 'morhetz/gruvbox'
@@ -818,12 +887,13 @@ set number relativenumber
 set termguicolors
 set guifont=Hack\ NF
 " too many statusline items
-set statusline+=%{get(g:,'coc_git_status','')}
-set statusline+=%{get(b:,'coc_git_blame','')}
-" set statusline+=%{StatusDiagnostic()}%{exists('*GTMStatusline')?'['.GTMStatusline().']':''}\ %<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-" set statusline+=%{NearestMethodOrFunction()}
+" set statusline+="%{get(g:,'coc_git_status','')}"
+" set statusline+="%{get(b:,'coc_git_blame','')}"
+" set statusline+="%{StatusDiagnostic()}%{exists('*GTMStatusline')?'['.GTMStatusline().']':''}\ %<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P"
+" set statusline+="%{NearestMethodOrFunction()}"
 
 set showtabline=2  " Show tabline
+set guioptions-=e
 set directory=/tmp
 set nobackup
 set nowritebackup
