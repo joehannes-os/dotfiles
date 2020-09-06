@@ -3,10 +3,8 @@ call plug#begin()
 Plug 'rhysd/reply.vim', { 'on': ['Repl', 'ReplAuto'] }
 
 let g:reply_repls = {
-\   'javascript': ['node'],
-\   'typescript': ['tsc'],
 \   'javascriptreact': ['node'],
-\   'typescriptreact': ['tsc']
+\   'typescriptreact': ['ts_node']
 \ }
 
 vnoremap <space>tR :'<,'>Repl<CR>
