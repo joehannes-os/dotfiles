@@ -6,8 +6,8 @@ set from = "johannes.neugschwentner@gmail.com"
 set sendmail = "msmtp -a joehannes"
 alias me Johannes Neugschwentner <johannes.neugschwentner@gmail.com>
 set folder=/home/joehannes/.local/share/mail/joehannes
-set header_cache = /home/joehannes/.cache/mutt-wizard/joehannes/headers
-set message_cachedir = /home/joehannes/.cache/mutt-wizard/joehannes/bodies
+#set header_cache = /home/joehannes/.cache/mutt-wizard/joehannes/headers
+#set message_cachedir = /home/joehannes/.cache/mutt-wizard/joehannes/bodies
 set mbox_type = Maildir
 
 set mail_check=60

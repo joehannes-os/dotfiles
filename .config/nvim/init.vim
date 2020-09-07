@@ -646,7 +646,7 @@ Plug 'voldikss/vim-floaterm'
 
 autocmd User Startified setlocal buflisted
 hi FloatermBorder guibg=magenta guifg=cyan
-set shell=/usr/bin/zsh
+set shell=/bin/zsh
 
 let g:floaterm_height=0.9
 let g:floaterm_width=0.9

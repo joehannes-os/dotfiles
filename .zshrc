@@ -1,11 +1,5 @@
 export TERM="screen-256color"
 
-# tmuxinator completion
-source ~/.local/bin/tmuxinator.zsh
-
-# gtm plugin
-source ~/.local/bin/gtm-plugin.sh
-
 # GO packages path
 export GOPATH=/home/joehannes/go
 
@@ -15,8 +9,11 @@ export BROWSER=/usr/bin/lynx
 # JAVA_HOME
 export JAVA_HOME=/usr/lib/jvm/default-java
 
+# Ruby gems path
+export GEMPATH=/home/joehannes/.gem/ruby/latest
+
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/.linuxbrew/bin:$HOME/.local/bin:/usr/local/bin:$HOME/.cargo/bin:$JAVA_HOME/bin:$PATH
+export PATH=$HOME/.linuxbrew/bin:$HOME/.local/bin:/usr/local/bin:$HOME/.cargo/bin:$JAVA_HOME/bin:$GEMPATH/bin:$GOPATH/bin:$PATH
 export FPATH=$HOME/.linuxbrew/share/zsh/site-functions:$FPATH
 if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
   export FPATH=/usr/local/share/zsh/site-functions:$FPATH
@@ -149,11 +146,19 @@ eval "$(hub alias -s)"
 zstyle :omz:plugins:ssh-agent agent-forwarding on
 zstyle :omz:plugins:ssh-agent identities id_rsa
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-nvm use v14.0.0
-
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
 source /home/joehannes/.oh-my-git/prompt.sh
 
+# tmuxinator completion
+source ~/.local/bin/tmuxinator.zsh
+
+# gtm plugin
+source ~/.local/bin/gtm-plugin.sh
+
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+nvm use --silent default
+
