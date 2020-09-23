@@ -87,7 +87,7 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern url)
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  git git-flow git-extras github git-hubflow ssh-agent compleat npm zsh-completions history history-substring-search tig copybuffer copydir copyfile dash fancy-ctrl-z sudo taskwarrior tmux tmuxinator zsh-navigation-tools zsh-autosuggestions zsh-peco-history zsh-select ubuntu vi-mode zsh-vimode-visual z zsh-wakatime zsh-syntax-highlighting gpg-agent
+  git git-flow git-extras github git-hubflow ssh-agent compleat npm zsh-completions history history-substring-search tig copybuffer copydir copyfile dash fancy-ctrl-z sudo taskwarrior tmux tmuxinator zsh-navigation-tools zsh-autosuggestions zsh-peco-history zsh-select ubuntu vi-mode zsh-vimode-visual z zsh-wakatime zsh-syntax-highlighting gpg-agent fasd jump gnu-utils zsh-interactive-cd zsh_reload
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -125,12 +125,16 @@ alias ohmytmuxcfg="nvim ~/.tmux.conf.local"
 alias ohmymux="txs regular"
 alias ohmymutt="nvim ~/.neomuttrc"
 
-i() {
-  sudo apt-get install $1;
+ei() {
+  sudo sisyphus --install $1;
 }
 
-s() {
-  apt search $1;
+es() {
+  sudo sisyphus --search $1;
+}
+
+eu() {
+  sudo sisyphus --upgrade;
 }
 
 txq() {

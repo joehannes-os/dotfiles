@@ -21,7 +21,7 @@ let g:vrc_curl_opts = {
 \}
 " \ '-b': '/path/to/cookie', \ '-c': '/path/to/cookie',
 
-nnoremap <leader>A :edit ~/.local/snippets/vim.rest<CR>
+nnoremap <leader>tr :edit ~/.local/snippets/vim.rest<CR>
 nnoremap <leader><cr> :call VrcQuery()<CR>
 
 Plug 'junegunn/goyo.vim'
@@ -206,8 +206,8 @@ nnoremap <silent> <space>tr  :<C-u>CocListResume<CR>
 nnoremap <silent> <space>ty  :<C-u>CocList yank<cr>
 nnoremap <silent> <space>td  :<C-u>CocList todolist<cr>
 nnoremap <silent> <space>tf  :<C-u>CocList grep<cr>
-nnoremap <silent> <leader>s :CocCommand session.save<CR>
-nnoremap <silent> <leader>o :CocCommand session.load<CR>
+nnoremap <silent> <space><leader> :CocCommand session.save<cr>
+nnoremap <silent> <space>. :CocCommand session.load<CR>
 nnoremap <silent> <space>mt :CocCommand bookmark.toggle<CR>
 nnoremap <silent> <space>mp :CocCommand bookmark.prev<CR>
 nnoremap <silent> <space>mn :CocCommand bookmark.next<CR>
