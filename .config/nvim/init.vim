@@ -206,7 +206,7 @@ nnoremap <silent> <space>tr  :<C-u>CocListResume<CR>
 nnoremap <silent> <space>ty  :<C-u>CocList yank<cr>
 nnoremap <silent> <space>td  :<C-u>CocList todolist<cr>
 nnoremap <silent> <space>tf  :<C-u>CocList grep<cr>
-nnoremap <silent> <space><leader> :CocCommand session.save<cr>
+nnoremap <silent> <space>, :CocCommand session.save<cr>
 nnoremap <silent> <space>. :CocCommand session.load<CR>
 nnoremap <silent> <space>mt :CocCommand bookmark.toggle<CR>
 nnoremap <silent> <space>mp :CocCommand bookmark.prev<CR>
@@ -775,10 +775,14 @@ let g:user_emmet_leader_key='<c-z>'
 "Plug 'vim-airline/vim-airline'
 "Plug 'vim-airline/vim-airline-themes'
 
+Plug 'ludovicchabant/vim-gutentags'
+
+let g:gutentags_file_list_command = 'rg --files'
+
 Plug 'majutsushi/tagbar'
 
 let g:tagbar_type_typescript = {
-  \ 'ctagstype': 'typescript',
+  \ 'ctagstype': 'typescriptreact',
   \ 'kinds': [
     \ 'c:classes',
     \ 'n:modules',
@@ -879,6 +883,7 @@ syntax on
 " nightandday-theme plugin takes care of this
 " colorscheme monokai_pro
 
+set foldmethod=syntax
 set rtp+=/home/joehannes/.config/nvim/gitted/tabnine-vim
 set ruler
 set number relativenumber
