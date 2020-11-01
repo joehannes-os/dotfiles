@@ -13,8 +13,8 @@ export JAVA_HOME=/usr/lib/jvm/default-java
 export GEMPATH=/home/joehannes/.gem/ruby/latest
 
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/.linuxbrew/bin:$HOME/.local/bin:/usr/local/bin:$HOME/.cargo/bin:$JAVA_HOME/bin:$GEMPATH/bin:$GOPATH/bin:$PATH
-export FPATH=$HOME/.linuxbrew/share/zsh/site-functions:$FPATH
+export PATH=/home/linuxbrew/.linuxbrew/bin:$HOME/.local/bin:/usr/local/bin:$HOME/.cargo/bin:$JAVA_HOME/bin:$GEMPATH/bin:$GOPATH/bin:$PATH
+export FPATH=/home/linuxbrew/.linuxbrew/share/zsh/site-functions:$FPATH
 if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
   export FPATH=/usr/local/share/zsh/site-functions:$FPATH
 fi
@@ -165,4 +165,3 @@ source ~/.local/bin/gtm-plugin.sh
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 nvm use --silent default
-
