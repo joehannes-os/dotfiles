@@ -144,6 +144,7 @@ let g:coc_global_extensions = [
 			\'coc-json',
 			\'coc-jira-complete',
 			\'coc-html',
+      \'coc-svg',
 			\'coc-highlight',
 			\'coc-gitignore',
 			\'coc-github',
@@ -274,6 +275,8 @@ augroup cocAutoFormat
 augroup end
 
 nnoremap <space>rp  :Prettier<cr>
+au FileType svg nnoremap <space>rp :CocCommand svg.prettySvg<cr>
+
 nnoremap <leader>.  :Fold<cr>
 xmap <space>rs  <Plug>(coc-format-selected)
 nmap <space>rs  <Plug>(coc-format-selected)
@@ -434,11 +437,11 @@ highlight link WintabsActive TabLineSel
 
 " Highlight group for active buffer/tab.
 
-highlight link WintabsInactive TabLine
+highlight link WintabsInactive TabLineFill
 
 " Highlight group for inactive buffer/tab.
 
-highlight link WintabsArrow TabLine
+highlight link WintabsArrow TabLineFill
 
 " Highlight group for arrows.
 
@@ -537,6 +540,7 @@ endfunction
 
 let g:fzf_layout = { 'window': 'call OpenFloatingWin()' }
 
+nnoremap <space>; :GFiles?<cr>
 nnoremap ; :GFiles --recurse-submodules<Cr>
 
 "   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
@@ -667,7 +671,14 @@ Plug 'HerringtonDarkholme/yats.vim'
 "Plug 'jalvesaq/vimcmdline'
 " Plug 'airblade/vim-gitgutter'
 " Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
-"Plug 'm00qek/nvim-contabs'
+Plug 'm00qek/nvim-contabs'
+
+let g:contabs#integrations#tabline#theme = 'project/path'
+let g:contabs#project#locations = [
+      \  { 'path': '~/.local/git/', 'depth': 2, 'git_only': v:true },
+      \]
+
+nnoremap <silent> <space>p :call contabs#project#select()<CR>
 Plug 'tomtom/tcomment_vim'
 " Plug 'rking/ag.vim'
 Plug 'tpope/vim-fugitive'
@@ -772,7 +783,7 @@ Plug 'mattn/emmet-vim'
 let g:user_emmet_leader_key='<c-z>'
 
 "Plug 'w0rp/ale'
-"Plug 'vim-airline/vim-airline'
+"Plug 'vshortenim-airline/vim-airline'
 "Plug 'vim-airline/vim-airline-themes'
 
 Plug 'ludovicchabant/vim-gutentags'
@@ -913,7 +924,9 @@ set signcolumn=yes
 set mouse=a mousemodel=popup
 set tabstop=2 softtabstop=0 shiftwidth=2 expandtab
 
-let g:tablineclosebutton=1
+let g:tablineclosebutton=0
+set tabline=%!contabs#integrations#tabline#create()
+
 let g:Powerline_symbols = 'fancy'
 
 hi TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
