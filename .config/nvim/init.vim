@@ -65,7 +65,7 @@ source ~/.cache/calendar.vim/credentials.vim
 
 nnoremap <leader>C :Calendar -view=day -position=left -split=vertical -width=30<CR>
 
-" Plug 'RRethy/vim-illuminate.git'
+Plug 'RRethy/vim-illuminate.git', { 'do': 'take ~/.config/nvim/pack/plugins/start && hub clone RRethy/vim-illuminate' }
 " Possibly this repo needs installation/cloning manually
 " Time in milliseconds (default 250)
 let g:Illuminate_delay = 100
@@ -76,9 +76,11 @@ hi link illuminatedWord Visual
 Plug 'nightsense/night-and-day'
 
 let g:nd_themes = [
-  \ ['sunrise+0', 'space_vim_theme', 'dark' ],
-  \ ['sunset+0', 'molokai', '' ],
+  \ ['sunrise+0', 'gruvbox', 'light' ],
+  \ ['sunset+0', 'gruvbox', 'dark' ],
 \ ]
+
+" Europe/Austria/Vienna
 let g:nd_latitude = '50'
 let g:nd_timeshift = '63'
 
@@ -551,16 +553,6 @@ command! -bang -nargs=* Ag
   \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
   \                 <bang>0)
 
-function! s:fzf_statusline()
-  " Override statusline as you like
-  highlight fzf1 ctermfg=161 ctermbg=251
-  highlight fzf2 ctermfg=23 ctermbg=251
-  highlight fzf3 ctermfg=237 ctermbg=251
-  setlocal statusline+=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
-endfunction
-
-autocmd! User FzfStatusLine call <SID>fzf_statusline()
-
 Plug 'fszymanski/fzf-gitignore', {'do': ':UpdateRemotePlugins'}
 
 Plug 'raimondi/delimitmate'
@@ -726,6 +718,13 @@ let g:crystalline_statusline_fn = 'StatusLine'
 let g:crystalline_tabline_fn = 'TabLine'
 let g:crystalline_theme = 'molokai'
 
+set statusline=%!StatusLine()
+set tabline=%!TabLine()
+set showtabline=2
+set guioptions-=e
+set laststatus=2
+
+
 "Plug 'itchyny/lightline.vim'
 
 " autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
@@ -829,15 +828,15 @@ map <leader>So :Obsess!<cr>
 
 " Plug 'davidhalter/jedi-vim'
 ""Plug 'felipec/notmuch-vim'
-Plug 'mkitt/tabline.vim'
+" Plug 'mkitt/tabline.vim'
 Plug 'ayu-theme/ayu-vim'
-Plug 'phanviet/vim-monokai-pro'
-Plug 'tomasr/molokai'
+" Plug 'phanviet/vim-monokai-pro'
+" Plug 'tomasr/molokai'
 
-" Plug 'sainnhe/sonokai'
+Plug 'sainnhe/sonokai'
 
-" let g:sonokai_enable_italic = 1
-" let g:sonokai_disable_italic_comment = 1
+let g:sonokai_enable_italic = 1
+let g:sonokai_disable_italic_comment = 1
 
 Plug 'hzchirs/vim-material'
 Plug 'morhetz/gruvbox'
@@ -906,13 +905,10 @@ set guifont=Hack\ NF
 " set statusline+="%{StatusDiagnostic()}%{exists('*GTMStatusline')?'['.GTMStatusline().']':''}\ %<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P"
 " set statusline+="%{NearestMethodOrFunction()}"
 
-set showtabline=2  " Show tabline
-set guioptions-=e
 set directory=/tmp
 set nobackup
 set nowritebackup
 set noswapfile
-set laststatus=2
 set hidden
 set cmdheight=1
 " You will have bad experience for diagnostic messages when it's default 4000.
@@ -924,8 +920,8 @@ set signcolumn=yes
 set mouse=a mousemodel=popup
 set tabstop=2 softtabstop=0 shiftwidth=2 expandtab
 
-let g:tablineclosebutton=0
-set tabline=%!contabs#integrations#tabline#create()
+let g:tablineclosebutton=1
+" set tabline=%!contabs#integrations#tabline#create()
 
 let g:Powerline_symbols = 'fancy'
 
