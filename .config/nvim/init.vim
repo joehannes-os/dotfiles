@@ -21,8 +21,28 @@ let g:vrc_curl_opts = {
 \}
 " \ '-b': '/path/to/cookie', \ '-c': '/path/to/cookie',
 
-nnoremap <leader>tr :edit ~/.local/snippets/vim.rest<CR>
-nnoremap <leader><cr> :call VrcQuery()<CR>
+nnoremap <space>tAC :edit ~/.local/snippets/vim.rest<CR>
+nnoremap <space>xAQ :call VrcQuery()<CR>
+
+Plug 'Konfekt/Fastfold'
+
+nmap zuz <Plug>(FastFoldUpdate)
+let g:fastfold_savehook = 1
+let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
+let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
+
+let g:markdown_folding = 1
+let g:tex_fold_enabled = 1
+let g:vimsyn_folding = 'af'
+let g:xml_syntax_folding = 1
+let g:javaScript_fold = 1
+let g:sh_fold_enabled= 7
+let g:ruby_fold = 1
+let g:perl_fold = 1
+let g:perl_fold_blocks = 1
+let g:r_syntax_folding = 1
+let g:rust_fold = 1
+let g:php_folding = 1
 
 Plug 'junegunn/goyo.vim'
 
@@ -49,22 +69,21 @@ endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
-nnoremap <leader><space> :Goyo<CR>
-nnoremap <leader> <C-w>
+nnoremap <space>tF :Goyo<CR>
 nnoremap <leader>J <C-w>+
 nnoremap <leader>K <C-w>-
 nnoremap <leader>L <C-w>>
 nnoremap <leader>H <C-w>\<>
 
-Plug 'itchyny/calendar.vim'
-
-let g:calendar_google_calendar = 1
-let g:calendar_google_task = 1
-
-source ~/.cache/calendar.vim/credentials.vim
-
-nnoremap <leader>C :Calendar -view=day -position=left -split=vertical -width=30<CR>
-
+" Plug 'itchyny/calendar.vim'
+"
+" let g:calendar_google_calendar = 1
+" let g:calendar_google_task = 1
+"
+" source ~/.cache/calendar.vim/credentials.vim
+"
+" nnoremap <leader>C :Calendar -view=day -position=left -split=vertical -width=30<CR>
+"
 Plug 'RRethy/vim-illuminate.git', { 'do': 'take ~/.config/nvim/pack/plugins/start && hub clone RRethy/vim-illuminate' }
 " Possibly this repo needs installation/cloning manually
 " Time in milliseconds (default 250)
@@ -97,17 +116,25 @@ nnoremap <leader>j :call g:CursorHistForward()<CR>
 nnoremap <leader>k :call g:CursorHistBack()<CR>
 
 " vim-markdown-composer
-function! BuildComposer(info)
-  if a:info.status != 'unchanged' || a:info.force
-    if has('nvim')
-      !cargo build --release
-    else
-      !cargo build --release --no-default-features --features json-rpc
-    endif
-  endif
-endfunction
+" function! BuildComposer(info)
+"   if a:info.status != 'unchanged' || a:info.force
+"     if has('nvim')
+"       !cargo build --release
+"     else
+"       !cargo build --release --no-default-features --features json-rpc
+"     endif
+"   endif
+" endfunction
+"
+" Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
+"
 
-Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+
+augroup pandoc_syntax
+    au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
+augroup END
 
 Plug 'universal-ctags/ctags'
 
@@ -164,6 +191,7 @@ let g:coc_global_extensions = [
 			\'coc-bookmark',
 			\'coc-angular',
 			\'coc-actions'
+      \'coc-floaterm',
 			\]
 
 " Remap for do codeAction of selected region
@@ -651,8 +679,10 @@ let g:floaterm_position='top'
 let g:floaterm_winblend=10
 
 nnoremap <space>tt :FloatermToggle<CR>
-inoremap <space>tt <C-\><C-n>:FloatermToggle<CR>
-tnoremap <space>tt <C-\><C-n>:FloatermToggle<CR>
+tnoremap <space>tt <C-\><C-n>:FloatermToggle<cr>
+inoremap <space>tt <C-\><C-n>:FloatermToggle<cr>
+nnoremap <space>ct :CocCommand floaterm.new<CR>
+nnoremap <space>ft :CocList floaterm<cr>
 
 " Plug 'fmoralesc/nlanguagetool.nvim'
 Plug 'sheerun/vim-polyglot'
@@ -668,14 +698,17 @@ Plug 'm00qek/nvim-contabs'
 let g:contabs#integrations#tabline#theme = 'project/path'
 let g:contabs#project#locations = [
       \  { 'path': '~/.local/git/', 'depth': 2, 'git_only': v:true },
+      \  { 'path': '~/.local/git/playground', 'depth': 0, 'git_only': v:false, 'formatter': { _ -> 'playground' } },
       \]
 
-nnoremap <silent> <space>p :call contabs#project#select()<CR>
+nnoremap <silent> <space>tP :call contabs#project#select()<CR>
+nnoremap <silent> <space>tB :call contabs#buffer#select()<CR>
+
 Plug 'tomtom/tcomment_vim'
 " Plug 'rking/ag.vim'
 Plug 'tpope/vim-fugitive'
 
-nnoremap <space>tg :<C-u>Gblame<cr>
+nnoremap <space>tG :<C-u>Gblame<cr>
 " Plug 'Chun-Yang/vim-action-ag'
 Plug 'editorconfig/editorconfig-vim'
 
@@ -779,7 +812,7 @@ Plug 'tpope/vim-sleuth'
 Plug 'machakann/vim-sandwich'
 Plug 'mattn/emmet-vim'
 
-let g:user_emmet_leader_key='<c-z>'
+let g:user_emmet_leader_key="<c-z>"
 
 "Plug 'w0rp/ale'
 "Plug 'vshortenim-airline/vim-airline'
@@ -805,7 +838,7 @@ let g:tagbar_type_typescript = {
   \ ]
 \ }
 
-nnoremap <leader>t :TagbarToggle<CR>
+nnoremap <space>tT :TagbarToggle<CR>
 
 " Plug 'severin-lemaignan/vim-minimap'
 
@@ -817,15 +850,15 @@ Plug 'francoiscabrol/ranger.vim'
 
 let g:ranger_replace_netrw = 1 "// open ranger when vim open a directory
 
-map <leader>f :Ranger<cr>
+map <space>tf :Ranger<cr>
 
 Plug 'rbgrouleff/bclose.vim'
 Plug 'tmux-plugins/vim-tmux-focus-events'
-Plug 'tpope/vim-obsession'
-
-map <leader>Ss :Obsess<cr>
-map <leader>So :Obsess!<cr>
-
+" Plug 'tpope/vim-obsession'
+"
+" map <leader>Ss :Obsess<cr>
+" map <leader>So :Obsess!<cr>
+"
 " Plug 'davidhalter/jedi-vim'
 ""Plug 'felipec/notmuch-vim'
 " Plug 'mkitt/tabline.vim'
@@ -833,7 +866,7 @@ map <leader>So :Obsess!<cr>
 " Plug 'phanviet/vim-monokai-pro'
 " Plug 'tomasr/molokai'
 " Plug 'altercation/vim-colors-solarized'
-Plug 'therubymug/vim-pyte'
+" Plug 'therubymug/vim-pyte'
 Plug 'joehannes-ux/vim-one'
 
 let g:one_allow_italics = 1 " I love italic for comments
@@ -849,18 +882,18 @@ if (has("nvim"))
     set termguicolors
   endif
 
-Plug 'vim-scripts/summerfruit256.vim'
+" Plug 'vim-scripts/summerfruit256.vim'
 Plug 'patstockwell/vim-monokai-tasty'
 
 let g:vim_monokai_tasty_italic = 1
 
-Plug 'sainnhe/sonokai'
-
-let g:sonokai_enable_italic = 1
-let g:sonokai_disable_italic_comment = 1
-
+" Plug 'sainnhe/sonokai'
+"
+" let g:sonokai_enable_italic = 1
+" let g:sonokai_disable_italic_comment = 1
+"
 " Plug 'hzchirs/vim-material'
-Plug 'morhetz/gruvbox'
+" Plug 'morhetz/gruvbox'
 " Plug 'liuchengxu/space-vim-theme'
 " Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'ntpeters/vim-better-whitespace'
@@ -974,6 +1007,6 @@ nnoremap [t :tabprevious<cr>
 nnoremap ]t :tabnext<cr>
 
 " super quick search and replace
-nnoremap <Space>tss :'{,'}s/\<<C-r>=expand('<cword>')<CR>\>/
+nnoremap <Space>tsw :'{,'}s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <Space>ts% :%s/\<<C-r>=expand('<cword>')<CR>\>/
 
