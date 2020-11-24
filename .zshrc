@@ -125,18 +125,6 @@ alias ohmytmuxcfg="nvim ~/.tmux.conf.local"
 alias ohmymux="txs regular"
 alias ohmymutt="nvim ~/.neomuttrc"
 
-ei() {
-  sudo sisyphus --install $1;
-}
-
-es() {
-  sudo sisyphus --search $1;
-}
-
-eu() {
-  sudo sisyphus --upgrade;
-}
-
 txq() {
 	tmuxinator stop $1;
 }
@@ -159,9 +147,14 @@ source ~/.local/bin/tmuxinator.zsh
 # gtm plugin
 source ~/.local/bin/gtm-plugin.sh
 
+# zsh shnippets
+source ~/.local/git/zshnip/zshnip.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 nvm use --silent default
+
+source "$HOME/.local/git/zsh-system-clipboard/zsh-system-clipboard.zsh"
+typeset -g ZSH_SYSTEM_CLIPBOARD_TMUX_SUPPORT='true'
