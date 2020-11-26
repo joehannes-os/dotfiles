@@ -1,5 +1,13 @@
 call plug#begin()
 
+Plug 'smitajit/bufutils.vim'
+
+let g:bufutils#open#use_fzf = 1
+
+nnoremap <space>tM :BResizeZoom<cr>
+
+Plug 'metakirby5/codi.vim'
+
 Plug 'rhysd/reply.vim', { 'on': ['Repl', 'ReplAuto'] }
 
 let g:reply_repls = {
@@ -190,7 +198,7 @@ let g:coc_global_extensions = [
 			\'coc-browser',
 			\'coc-bookmark',
 			\'coc-angular',
-			\'coc-actions'
+			\'coc-actions',
       \'coc-floaterm',
 			\]
 
@@ -682,7 +690,7 @@ nnoremap <space>tt :FloatermToggle<CR>
 tnoremap <space>tt <C-\><C-n>:FloatermToggle<cr>
 inoremap <space>tt <C-\><C-n>:FloatermToggle<cr>
 nnoremap <space>ct :CocCommand floaterm.new<CR>
-nnoremap <space>ft :CocList floaterm<cr>
+nnoremap <space>lt :CocList floaterm<cr>
 
 " Plug 'fmoralesc/nlanguagetool.nvim'
 Plug 'sheerun/vim-polyglot'
@@ -899,6 +907,12 @@ let g:vim_monokai_tasty_italic = 1
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'ryanoasis/vim-devicons'
 " Plug 'brettanomyces/nvim-editcommand'
+
+" let g:editcommand_prompt = ''
+" let g:editcommand_no_mappings = 1
+" tmap <c-x> :FloatermToggle<cr><Plug>EditCommand
+" nnoremap <space>qSB :%FloatermSend<cr>:close<cr>:FloatermToggle<cr>
+
 call plug#end()
 
 " useful functions
