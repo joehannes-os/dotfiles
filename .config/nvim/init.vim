@@ -1,5 +1,7 @@
 call plug#begin()
 
+Plug 'tyru/open-browser.vim'
+
 Plug 'smitajit/bufutils.vim'
 
 let g:bufutils#open#use_fzf = 1
@@ -153,12 +155,14 @@ let g:rainbow_active = 1
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 let g:coc_global_extensions = [
+			\'coc-ultisnips',
+			\'coc-snippets',
+			\'coc-neosnippet',
 			\'coc-yank',
 			\'coc-yaml',
 			\'coc-xml',
 			\'coc-webpack',
 			\'coc-utils',
-			\'coc-ultisnips',
 			\'coc-tsserver',
 			\'coc-tslint-plugin',
 			\'coc-translator',
@@ -171,11 +175,9 @@ let g:coc_global_extensions = [
 			\'coc-stylelint',
 			\'coc-styled-components',
 			\'coc-spell-checker',
-			\'coc-snippets',
 			\'coc-scssmodules',
 			\'coc-prettier',
 			\'coc-pairs',
-			\'coc-neosnippet',
 			\'coc-markdownlint',
 			\'coc-lists',
 			\'coc-json',
@@ -225,31 +227,31 @@ command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 " Using CocList
 " Show all diagnostics
-nnoremap <silent> <space>te  :<C-u>CocList diagnostics<cr>
+nnoremap <silent> <space>ld  :<C-u>CocList diagnostics<cr>
 " Manage extensions
-nnoremap <silent> <space>tp  :<C-u>CocList extensions<cr>
+nnoremap <silent> <space>lCm  :<C-u>CocList extensions<cr>
 " Show commands
-nnoremap <silent> <space>th  :<C-u>CocList commands<cr>
+nnoremap <silent> <space>lCh  :<C-u>CocList commands<cr>
 " Find symbol of current document
-nnoremap <silent> <space>to  :<C-u>CocList outline<cr>
+nnoremap <silent> <space>lo  :<C-u>CocList outline<cr>
 " Search snippets
-nnoremap <silent> <space>t*  :<C-u>CocList snippets<cr>
+nnoremap <silent> <space>lCs  :<C-u>CocList snippets<cr>
 " Search workspace symbols
-nnoremap <silent> <space>ts  :<C-u>CocList -I symbols<cr>
+nnoremap <silent> <space>ls  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
 nnoremap <silent> <space>aj  :<C-u>CocNext<CR>
 " Do default action for previous item.
 nnoremap <silent> <space>ak  :<C-u>CocPrev<CR>
 " Resume latest coc list
-nnoremap <silent> <space>tr  :<C-u>CocListResume<CR>
-nnoremap <silent> <space>ty  :<C-u>CocList yank<cr>
-nnoremap <silent> <space>td  :<C-u>CocList todolist<cr>
-nnoremap <silent> <space>tf  :<C-u>CocList grep<cr>
-nnoremap <silent> <space>, :CocCommand session.save<cr>
-nnoremap <silent> <space>. :CocCommand session.load<CR>
-nnoremap <silent> <space>mt :CocCommand bookmark.toggle<CR>
-nnoremap <silent> <space>mp :CocCommand bookmark.prev<CR>
-nnoremap <silent> <space>mn :CocCommand bookmark.next<CR>
+nnoremap <silent> <space>l.  :<C-u>CocListResume<CR>
+nnoremap <silent> <space>ly  :<C-u>CocList yank<cr>
+nnoremap <silent> <space>lt  :<C-u>CocList todolist<cr>
+nnoremap <silent> <space>lf  :<C-u>CocList grep<cr>
+nnoremap <silent> <space>> :CocCommand session.save<cr>
+nnoremap <silent> <space>< :CocCommand session.load<CR>
+nnoremap <silent> <space>M :CocCommand bookmark.toggle<CR>
+nnoremap <silent> <space>mk :CocCommand bookmark.prev<CR>
+nnoremap <silent> <space>mj :CocCommand bookmark.next<CR>
 
 " Cfg for ultisnip snippets
 let g:ultisnips_javascript = {
@@ -261,16 +263,16 @@ let g:ultisnips_javascript = {
 " Snippets
 " --------
 " Use <C-l> for trigger snippet expand.
-imap <c-<cr>> <Plug>(coc-snippets-expand)
+imap <c-l> <Plug>(coc-snippets-expand)
 " Use <C-j> for select text for visual placeholder of snippet.
-vmap <space><space> <Plug>(coc-snippets-select)
+vmap <space><cr> <Plug>(coc-snippets-select)
 " Use <C-j> for jump to next placeholder, it's default of coc.nvim
 let g:coc_snippet_next = '<c-j>'
 " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
 let g:coc_snippet_prev = '<c-k>'
 
 inoremap <silent><expr> <C-TAB>
-      \ pumvisible() ? coc#_select_confirm() :
+       \ pumvisible() ? coc#_select_confirm() :
       \ coc#expandableOrJumpable() ? "\<c-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
       \ <SID>check_back_space() ? "\<tab>" :
       \ coc#refresh()
@@ -323,8 +325,8 @@ nmap <space>rs  <Plug>(coc-format-selected)
 " --------------------------
 
 " Use `[c` and `]c` to navigate diagnostics
-nmap <silent> [e <Plug>(coc-diagnostic-prev)
-nmap <silent> ]e <Plug>(coc-diagnostic-next)
+nmap <silent> [d <Plug>(coc-diagnostic-prev)
+nmap <silent> ]d <Plug>(coc-diagnostic-next)
 
 " Remap keys for gotos
 " --------------------
@@ -548,6 +550,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 let $FZF_DEFAULT_OPTS = '--layout=reverse'
+let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 function! OpenFloatingWin()
 	let height = &lines - 3
@@ -580,6 +583,8 @@ let g:fzf_layout = { 'window': 'call OpenFloatingWin()' }
 
 nnoremap <space>; :GFiles?<cr>
 nnoremap ; :GFiles --recurse-submodules<Cr>
+nnoremap <space>lH :History<CR>
+nnoremap <space>lF :Ag<CR>
 
 "   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
 "   :Ag! - Start fzf in fullscreen and display the preview window above
@@ -854,11 +859,25 @@ nnoremap <space>tT :TagbarToggle<CR>
 
 " Plug 'ashisha/image.vim'
 
-Plug 'francoiscabrol/ranger.vim'
+Plug 'lokaltog/neoranger'
 
-let g:ranger_replace_netrw = 1 "// open ranger when vim open a directory
+" Open ranger at current file with "-"
+nnoremap <silent> <space>tf :RangerCurrentFile<CR>
 
-map <space>tf :Ranger<cr>
+" Open ranger in current working directory
+nnoremap <silent> <leader>f :Ranger<CR>
+
+" for setting ranger viewmode values
+let g:neoranger_viewmode='miller' " supported values are ['multipane', 'miller']
+
+" for setting any extra option passed to ranger params
+" let g:neoranger_opts='--cmd="set show_hidden true"' " this line makes ranger show hidden files by default
+
+" Plug 'francoiscabrol/ranger.vim'
+"
+" let g:ranger_replace_netrw = 1 "// open ranger when vim open a directory
+"
+" map <space>tf :Ranger<cr>
 
 Plug 'rbgrouleff/bclose.vim'
 Plug 'tmux-plugins/vim-tmux-focus-events'
