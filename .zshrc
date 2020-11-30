@@ -158,3 +158,7 @@ nvm use --silent default
 
 source "$HOME/.local/git/zsh-system-clipboard/zsh-system-clipboard.zsh"
 typeset -g ZSH_SYSTEM_CLIPBOARD_TMUX_SUPPORT='true'
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+source ~/.rvm/scripts/rvm
