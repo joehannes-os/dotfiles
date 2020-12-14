@@ -1,6 +1,6 @@
 # /home/joehannes/.config/tmuxinator/manual.yml
 
-name: regular
+name: "הישׁמה הושׁי"
 root: ~/.local/git
 
 # Optional tmux socket
@@ -40,12 +40,10 @@ startup_window: editor
 # attach: false
 
 windows:
+  - ps: bpytop
   - mail: neomutt
-  - zsh: votd
+  - cli: votd
   - editor: nvim
-  - server: la
-  - git: tig
-  - docs: devdocs
   - tasks:
       layout: main-vertical
       panes:

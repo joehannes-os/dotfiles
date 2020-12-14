@@ -1,4 +1,24 @@
+let mapleader = ","
+
+" Autoinstall vim-plug
+if empty(glob('~/.nvim/autoload/plug.vim'))
+  silent !curl -fLo ~/.nvim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall
+endif
+
 call plug#begin()
+
+Plug 'voldikss/vim-skylight'
+
+let g:skylight_height = 0.9
+let g:skylight_position = 'right'
+
+nnoremap <silent> <space>jP :SkylightPreview<CR>
+nnoremap <silent><expr> <a-j> skylight#float#has_scroll() ? skylight#float#scroll(1, 10) : "\<C-f>"
+nnoremap <silent><expr> <a-k> skylight#float#has_scroll() ? skylight#float#scroll(0, 10) : "\<C-b>"
+
+hi SkylightBorder guibg=magenta guifg=cyan
 
 Plug 'tyru/open-browser.vim'
 
@@ -6,7 +26,7 @@ Plug 'smitajit/bufutils.vim'
 
 let g:bufutils#open#use_fzf = 1
 
-nnoremap <space>tM :BResizeZoom<cr>
+nnoremap <space>wM :BResizeZoom<cr>
 
 Plug 'metakirby5/codi.vim'
 
@@ -17,7 +37,8 @@ let g:reply_repls = {
 \   'typescriptreact': ['ts_node']
 \ }
 
-vnoremap <space>tR :'<,'>Repl<CR>
+vnoremap <space>tr :'<,'>Repl<cr>
+nnoremap <space>tr :%Repl<cr>
 
 Plug 'diepm/vim-rest-console'
 
@@ -31,8 +52,8 @@ let g:vrc_curl_opts = {
 \}
 " \ '-b': '/path/to/cookie', \ '-c': '/path/to/cookie',
 
-nnoremap <space>tAC :edit ~/.local/snippets/vim.rest<CR>
-nnoremap <space>xAQ :call VrcQuery()<CR>
+nnoremap <space>ta :edit ~/.local/snippets/vim.rest<CR>
+nnoremap <space>xa :call VrcQuery()<CR>
 
 Plug 'Konfekt/Fastfold'
 
@@ -94,7 +115,42 @@ nnoremap <leader>H <C-w>\<>
 "
 " nnoremap <leader>C :Calendar -view=day -position=left -split=vertical -width=30<CR>
 "
-Plug 'RRethy/vim-illuminate.git', { 'do': 'take ~/.config/nvim/pack/plugins/start && hub clone RRethy/vim-illuminate' }
+
+" Plug 'ayu-theme/ayu-vim'
+" Plug 'phanviet/vim-monokai-pro'
+" Plug 'tomasr/molokai'
+" Plug 'altercation/vim-colors-solarized'
+" Plug 'therubymug/vim-pyte'
+" Plug 'joehannes-ux/vim-one'
+" Plug 'kaicataldo/material.vim'
+" Plug 'vim-scripts/summerfruit256.vim'
+Plug 'patstockwell/vim-monokai-tasty'
+
+let g:vim_monokai_tasty_italic = 1
+
+" Plug 'sainnhe/sonokai'
+"
+" let g:sonokai_enable_italic = 1
+" let g:sonokai_disable_italic_comment = 1
+"
+" Plug 'hzchirs/vim-material'
+" Plug 'morhetz/gruvbox'
+Plug 'liuchengxu/space-vim-theme'
+
+let g:one_allow_italics = 1 " I love italic for comments
+
+if (has("nvim"))
+  "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  endif
+  "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
+  "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
+  " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
+  " if (has("termguicolors"))
+  "   set termguicolors
+  " endif
+
+Plug 'RRethy/vim-illuminate', { 'do': 'take ~/.config/nvim/pack/plugins/start && hub clone RRethy/vim-illuminate' }
 " Possibly this repo needs installation/cloning manually
 " Time in milliseconds (default 250)
 let g:Illuminate_delay = 100
@@ -105,7 +161,7 @@ hi link illuminatedWord Visual
 Plug 'nightsense/night-and-day'
 
 let g:nd_themes = [
-  \ ['sunrise+0', 'one', 'light' ],
+  \ ['sunrise+0', 'space_vim_theme', 'dark' ],
   \ ['sunset+0', 'vim-monokai-tasty', '' ],
 \ ]
 
@@ -146,23 +202,39 @@ augroup pandoc_syntax
     au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
 augroup END
 
-Plug 'universal-ctags/ctags'
-
 Plug 'frazrepo/vim-rainbow'
 
 let g:rainbow_active = 1
 
+Plug 'SirVer/ultisnips'
+
+" Cfg for ultisnip snippets
+let g:ultisnips_javascript = {
+\ 'keyword-spacing': 'always',
+\ 'semi': 'always',
+\ 'space-before-function-paren': 'always',
+\ }
+
+" Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
+" - https://github.com/Valloric/YouCompleteMe
+" - https://github.com/nvim-lua/completion-nvim
+let g:UltiSnipsListSnippets="<c-tab>"
+let g:UltiSnipsExpandTrigger="<c-cr>"
+let g:UltiSnipsJumpForwardTrigger="<a-j>"
+let g:UltiSnipsJumpBackwardTrigger="<a-k>"
+let g:UltiSnipsSnippetDirectories=[$HOME."/.local/snippets"]
+
+Plug 'honza/vim-snippets'
+
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 let g:coc_global_extensions = [
-			\'coc-ultisnips',
-			\'coc-snippets',
-			\'coc-neosnippet',
+      \'coc-snippets',
+      \'coc-fzf-preview',
 			\'coc-yank',
 			\'coc-yaml',
 			\'coc-xml',
 			\'coc-webpack',
-			\'coc-utils',
 			\'coc-tsserver',
 			\'coc-tslint-plugin',
 			\'coc-translator',
@@ -173,7 +245,6 @@ let g:coc_global_extensions = [
 			\'coc-svg',
 			\'coc-stylelintplus',
 			\'coc-stylelint',
-			\'coc-styled-components',
 			\'coc-spell-checker',
 			\'coc-scssmodules',
 			\'coc-prettier',
@@ -228,15 +299,12 @@ command! -nargs=0 Prettier :CocCommand prettier.formatFile
 " Using CocList
 " Show all diagnostics
 nnoremap <silent> <space>ld  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-nnoremap <silent> <space>lCm  :<C-u>CocList extensions<cr>
+" //TODO: add filter to not show cspell diagnostic ... more shortcuts
 " Show commands
-nnoremap <silent> <space>lCh  :<C-u>CocList commands<cr>
+nnoremap <silent> <space>lx  :<C-u>CocList commands<cr>
 " Find symbol of current document
 nnoremap <silent> <space>lo  :<C-u>CocList outline<cr>
-" Search snippets
-nnoremap <silent> <space>lCs  :<C-u>CocList snippets<cr>
-" Search workspace symbols
+" k Search workspace symbols
 nnoremap <silent> <space>ls  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
 nnoremap <silent> <space>aj  :<C-u>CocNext<CR>
@@ -249,27 +317,20 @@ nnoremap <silent> <space>lt  :<C-u>CocList todolist<cr>
 nnoremap <silent> <space>lf  :<C-u>CocList grep<cr>
 nnoremap <silent> <space>> :CocCommand session.save<cr>
 nnoremap <silent> <space>< :CocCommand session.load<CR>
-nnoremap <silent> <space>M :CocCommand bookmark.toggle<CR>
+nnoremap <silent> <space>mt :CocCommand bookmark.toggle<CR>
 nnoremap <silent> <space>mk :CocCommand bookmark.prev<CR>
 nnoremap <silent> <space>mj :CocCommand bookmark.next<CR>
-
-" Cfg for ultisnip snippets
-let g:ultisnips_javascript = {
-\ 'keyword-spacing': 'always',
-\ 'semi': 'always',
-\ 'space-before-function-paren': 'always',
-\ }
 
 " Snippets
 " --------
 " Use <C-l> for trigger snippet expand.
 imap <c-l> <Plug>(coc-snippets-expand)
 " Use <C-j> for select text for visual placeholder of snippet.
-vmap <space><cr> <Plug>(coc-snippets-select)
+vmap <space><c-cr> <Plug>(coc-snippets-select)
 " Use <C-j> for jump to next placeholder, it's default of coc.nvim
-let g:coc_snippet_next = '<c-j>'
+let g:coc_snippet_next = '<a-j>'
 " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
-let g:coc_snippet_prev = '<c-k>'
+let g:coc_snippet_prev = '<a-k>'
 
 inoremap <silent><expr> <C-TAB>
        \ pumvisible() ? coc#_select_confirm() :
@@ -296,12 +357,11 @@ nmap <space>aa  <Plug>(coc-codeaction)
 " Fix autofix problem of current line
 nmap <space>af  <Plug>(coc-fix-current)
 
-" ---
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Remap for rename current word
-nmap <space>rn <Plug>(coc-rename)
+nmap <space>fr <Plug>(coc-rename)
 
 " formatting related stuff
 " ------------------------
@@ -314,12 +374,12 @@ augroup cocAutoFormat
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-nnoremap <space>rp  :Prettier<cr>
-au FileType svg nnoremap <space>rp :CocCommand svg.prettySvg<cr>
+nnoremap <space>Rp  :Prettier<cr>
+au FileType svg nnoremap <space>Rp :CocCommand svg.prettySvg<cr>
 
 nnoremap <leader>.  :Fold<cr>
-xmap <space>rs  <Plug>(coc-format-selected)
-nmap <space>rs  <Plug>(coc-format-selected)
+xmap <space>Rs  <Plug>(coc-format-selected)
+nmap <space>Rs  <Plug>(coc-format-selected)
 
 " diagnostics specific stuff
 " --------------------------
@@ -368,7 +428,7 @@ function! s:check_back_space() abort
 endfunction
 
 " Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <silent><expr> <c-tab> coc#refresh()
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -395,7 +455,7 @@ let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
 
 " Executive used when opening vista sidebar without specifying it.
 " See all the avaliable executives via `:echo g:vista#executives`.
-let g:vista_default_executive = 'coc'
+let g:vista_default_executive = 'ctags'
 
 " Declare the command including the executable and options used to generate ctags output
 " for some certain filetypes.The file path will be appened to your custom command.
@@ -415,7 +475,7 @@ let g:vista_ctags_cmd = {
 " To enable fzf's preview window set g:vista_fzf_preview.
 " The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
 " For example:
-let g:vista_fzf_preview = ['right:12%']
+let g:vista_fzf_preview = ['right:35%']
 " Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
 let g:vista#renderer#enable_icon = 1
 
@@ -426,22 +486,33 @@ let g:vista#renderer#icons = {
 \  }
 
 " toggle structural view
-nnoremap <space>tv :Vista!!<CR>
+nnoremap <space>tO :Vista!!<cr>
+nnoremap <leader>Oo :Vista coc<cr>
+nnoremap <leader>Oc :Vista!!<cr>
+
+" toggle fuzzy in buffer tag finder
+nnoremap <space>ft :Vista finder! coc<CR>
 
 " autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
 " autocmd vimEnter * Vista
 
 Plug 'zefei/vim-wintabs'
 
+command! Tabc WintabsCloseVimtab
+command! Tabo WintabsOnlyVimtabs
+
 map [b <Plug>(wintabs_previous)
 map ]b <Plug>(wintabs_next)
 map <space>bc <Plug>(wintabs_close)
 map <space>bu <Plug>(wintabs_undo)
 map <space>bo <Plug>(wintabs_only)
-map <space>btc <Plug>(wintabs_close_window)
-map <space>bto <Plug>(wintabs_only_window)
-command! Tabc WintabsCloseVimtab
-command! Tabo WintabsOnlyVimtabs
+map <space>wc <Plug>(wintabs_close_window)
+map <space>wo <Plug>(wintabs_only_window)
+
+nnoremap <space>bn :enew<CR>
+nnoremap <space>wn :tabnew<CR>
+nnoremap [w :tabprevious<cr>
+nnoremap ]w :tabnext<cr>
 
 Plug 'zefei/vim-wintabs-powerline'
 
@@ -540,9 +611,9 @@ noremap <silent><expr> ?  incsearch#go(<SID>incsearch_config({'command': '?'}))
 noremap <silent><expr> g/ incsearch#go(<SID>incsearch_config({'is_stay': 1}))
 
 
-Plug 'jlanzarotta/bufexplorer'
-
-nnoremap <space>tb  :BufExplorer<CR>
+" Plug 'jlanzarotta/bufexplorer'
+"
+" nnoremap <space>tB  :BufExplorer<CR>
 
 Plug 'arithran/vim-delete-hidden-buffers'
 
@@ -553,16 +624,16 @@ let $FZF_DEFAULT_OPTS = '--layout=reverse'
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 function! OpenFloatingWin()
-	let height = &lines - 3
-	let width = float2nr(&columns - (&columns * 2 / 10))
+	let height = &lines * 7 / 10
+	let width = float2nr(&columns - (&columns * 1 / 10))
 	let col = float2nr((&columns - width) / 2)
 
 	let opts = {
 			 \ 'relative': 'editor',
 			 \ 'row': 1,
-			 \ 'col': col + 30,
-			 \ 'width': width * 2 / 3,
-			 \ 'height': height / 3
+			 \ 'col': col,
+			 \ 'width': width,
+			 \ 'height': height,
 			 \ }
 
 	let buf = nvim_create_buf(v:false, v:true)
@@ -584,7 +655,7 @@ let g:fzf_layout = { 'window': 'call OpenFloatingWin()' }
 nnoremap <space>; :GFiles?<cr>
 nnoremap ; :GFiles --recurse-submodules<Cr>
 nnoremap <space>lH :History<CR>
-nnoremap <space>lF :Ag<CR>
+nnoremap <space>lF :Ag .<CR>
 
 "   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
 "   :Ag! - Start fzf in fullscreen and display the preview window above
@@ -593,6 +664,20 @@ command! -bang -nargs=* Ag
   \                 <bang>0 ? fzf#vim#with_preview('up:60%')
   \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
   \                 <bang>0)
+
+function! SearchWithAgInDirectory(...)
+  call fzf#vim#ag(join(a:000[1:], ' '), extend({'dir': a:1}, g:fzf#vim#with_preview('up:75%','?')), 1)
+endfunction
+command! -nargs=+ -complete=dir AgIn call SearchWithAgInDirectory(<f-args>)
+
+function! SearchDevDocsAg()
+  call SearchWithAgInDirectory('~/.manu-pages/md-detailled/')
+endfunction
+
+nnoremap <silent> <space>fK :call SearchDevDocsAg()<cr>
+nnoremap <silent> <space>fTb :CocCommand fzf-preview.BufferTags<cr>
+nnoremap <silent> <space>ff :CocCommand fzf-preview.BufferLines<cr>
+nnoremap <silent> <space>fm :CocCommand fzf-preview.Marks<cr>
 
 Plug 'fszymanski/fzf-gitignore', {'do': ':UpdateRemotePlugins'}
 
@@ -605,7 +690,6 @@ hi IndentGuidesEven ctermbg=darkgrey
 
 let g:indent_guides_enable_on_vim_startup = 1
 
-Plug 'honza/vim-snippets'
 Plug 'brooth/far.vim'
 
 set lazyredraw
@@ -613,12 +697,12 @@ let g:far#enable_undo=1
 let g:far#source = 'rg'
 
 " shortcut for far.vim find
-nnoremap <silent> <space>ff  :Farf<cr>
-vnoremap <silent> <space>ff  :Farf<cr>
+nnoremap <silent> <space>lFf  :Farf<cr>
+vnoremap <silent> <space>lFf  :Farf<cr>
 
 " shortcut for far.vim replace
-nnoremap <silent> <space>fr  :Farr<cr>
-vnoremap <silent> <space>fr  :Farr<cr>
+nnoremap <silent> <space>lFr  :Farr<cr>
+vnoremap <silent> <space>lFr  :Farr<cr>
 
 " Plug 'preservim/nerdcommenter'
 
@@ -700,6 +784,7 @@ nnoremap <space>lt :CocList floaterm<cr>
 " Plug 'fmoralesc/nlanguagetool.nvim'
 Plug 'sheerun/vim-polyglot'
 Plug 'roxma/vim-tmux-clipboard'
+Plug 'christoomey/vim-tmux-navigator'
 Plug 'HerringtonDarkholme/yats.vim'
 "Plug 'mhartington/nvim-typescript', { 'do': './install.sh' }
 " Plug 'autozimu/LanguageClient-neovim'
@@ -712,10 +797,11 @@ let g:contabs#integrations#tabline#theme = 'project/path'
 let g:contabs#project#locations = [
       \  { 'path': '~/.local/git/', 'depth': 2, 'git_only': v:true },
       \  { 'path': '~/.local/git/playground', 'depth': 0, 'git_only': v:false, 'formatter': { _ -> 'playground' } },
+      \  { 'path': '~/.local/snippets', 'depth': 0, 'git_only': v:false, 'formatter': { _ -> 'snippets' } },
       \]
 
-nnoremap <silent> <space>tP :call contabs#project#select()<CR>
-nnoremap <silent> <space>tB :call contabs#buffer#select()<CR>
+nnoremap <silent> <space>fp :call contabs#project#select()<CR>
+nnoremap <silent> <space>fb :call contabs#buffer#select()<CR>
 
 Plug 'tomtom/tcomment_vim'
 " Plug 'rking/ag.vim'
@@ -737,7 +823,7 @@ function! StatusLine(current, width)
   endif
   let l:s .= ' %f%h%w%m%r '
   if a:current
-    let l:s .= crystalline#right_sep('', 'Fill') . ' %{fugitive#head()}' . "%{get(g:,'coc_git_status','')}" . ' %{get(b:,"coc_git_blame","")}' . "%{NearestMethodOrFunction()}"
+    let l:s .= crystalline#right_sep('', 'Fill') . ' %{fugitive#head()}' . "%{get(g:,'coc_git_status','')}" . ' %{get(b:,"coc_git_blame","")}'
   endif
 
   let l:s .= '%='
@@ -833,25 +919,34 @@ let g:user_emmet_leader_key="<c-z>"
 
 Plug 'ludovicchabant/vim-gutentags'
 
+set tags=./tags,tags;$HOME
+
+let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
+let g:gutentags_ctags_tagfile = 'tags'
 let g:gutentags_file_list_command = 'rg --files'
 
-Plug 'majutsushi/tagbar'
+let g:gutentags_modules = ['ctags']
 
-let g:tagbar_type_typescript = {
-  \ 'ctagstype': 'typescriptreact',
-  \ 'kinds': [
-    \ 'c:classes',
-    \ 'n:modules',
-    \ 'f:functions',
-    \ 'v:variables',
-    \ 'v:varlambdas',
-    \ 'm:members',
-    \ 'i:interfaces',
-    \ 'e:enums',
-  \ ]
-\ }
+let g:gutentags_cache_dir = expand('~/.local/tags')
+let g:tagbar_ctags_bin = '/home/linuxbrew/.linuxbrew/bin/ctags'
 
-nnoremap <space>tT :TagbarToggle<CR>
+" Plug 'majutsushi/tagbar'
+"
+" let g:tagbar_type_typescript = {
+"   \ 'ctagstype': 'typescriptreact',
+"   \ 'kinds': [
+"     \ 'c:classes',
+"     \ 'n:modules',
+"     \ 'f:functions',
+"     \ 'v:variables',
+"     \ 'v:varlambdas',
+"     \ 'm:members',
+"     \ 'i:interfaces',
+"     \ 'e:enums',
+"   \ ]
+" \ }
+"
+" nnoremap <space>tT :TagbarToggle<CR>
 
 " Plug 'severin-lemaignan/vim-minimap'
 
@@ -868,10 +963,11 @@ nnoremap <silent> <space>tf :RangerCurrentFile<CR>
 nnoremap <silent> <leader>f :Ranger<CR>
 
 " for setting ranger viewmode values
-let g:neoranger_viewmode='miller' " supported values are ['multipane', 'miller']
+" supported values are ['multipane', 'miller']
+let g:neoranger_viewmode='miller'
 
-" for setting any extra option passed to ranger params
-" let g:neoranger_opts='--cmd="set show_hidden true"' " this line makes ranger show hidden files by default
+" this line makes ranger show hidden files by default
+let g:neoranger_opts='--cmd="set show_hidden true"'
 
 " Plug 'francoiscabrol/ranger.vim'
 "
@@ -881,6 +977,7 @@ let g:neoranger_viewmode='miller' " supported values are ['multipane', 'miller']
 
 Plug 'rbgrouleff/bclose.vim'
 Plug 'tmux-plugins/vim-tmux-focus-events'
+
 " Plug 'tpope/vim-obsession'
 "
 " map <leader>Ss :Obsess<cr>
@@ -889,39 +986,6 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 " Plug 'davidhalter/jedi-vim'
 ""Plug 'felipec/notmuch-vim'
 " Plug 'mkitt/tabline.vim'
-" Plug 'ayu-theme/ayu-vim'
-" Plug 'phanviet/vim-monokai-pro'
-" Plug 'tomasr/molokai'
-" Plug 'altercation/vim-colors-solarized'
-" Plug 'therubymug/vim-pyte'
-Plug 'joehannes-ux/vim-one'
-
-let g:one_allow_italics = 1 " I love italic for comments
-
-if (has("nvim"))
-  "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-  endif
-  "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
-  "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
-  " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
-  if (has("termguicolors"))
-    set termguicolors
-  endif
-
-" Plug 'vim-scripts/summerfruit256.vim'
-Plug 'patstockwell/vim-monokai-tasty'
-
-let g:vim_monokai_tasty_italic = 1
-
-" Plug 'sainnhe/sonokai'
-"
-" let g:sonokai_enable_italic = 1
-" let g:sonokai_disable_italic_comment = 1
-"
-" Plug 'hzchirs/vim-material'
-" Plug 'morhetz/gruvbox'
-" Plug 'liuchengxu/space-vim-theme'
 " Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'ryanoasis/vim-devicons'
@@ -963,10 +1027,6 @@ function! WinMove(key)
         exec "wincmd ".a:key
     endif
 endfunction
-
-" non plugin specific conf
-" ------------------------
-let mapleader = ","
 
 " use system clipboard
 if has('unnamedplus')
@@ -1028,18 +1088,12 @@ augroup END
 
 noremap <space><esc> :<C-u>set relativenumber!<CR>
 
-nnoremap <silent> <C-h> :call WinMove('h')<CR>
-nnoremap <silent> <C-j> :call WinMove('j')<CR>
-nnoremap <silent> <C-k> :call WinMove('k')<CR>
-nnoremap <silent> <C-l> :call WinMove('l')<CR>
+nnoremap <silent> <space>H :call WinMove('h')<CR>
+nnoremap <silent> <space>J :call WinMove('j')<CR>
+nnoremap <silent> <space>K :call WinMove('k')<CR>
+nnoremap <silent> <space>L :call WinMove('l')<CR>
+nnoremap <silent> [p :call WinMove('h')<CR>
+nnoremap <silent> ]p :call WinMove('l')<CR>
 
-nnoremap <space>bn :enew<CR>
-nnoremap <space>bd :BD<CR>
-nnoremap <space>bt :tabnew<CR>
-nnoremap [t :tabprevious<cr>
-nnoremap ]t :tabnext<cr>
-
-" super quick search and replace
-nnoremap <Space>tsw :'{,'}s/\<<C-r>=expand('<cword>')<CR>\>/
-nnoremap <Space>ts% :%s/\<<C-r>=expand('<cword>')<CR>\>/
-
+nnoremap <leader><leader>, :edit ~/.local/git/joehannes-os/dotfiles/.config/nvim/init.vim<cr>
+nnoremap <leader><leader>. :edit ~/.local/git/joehannes-os/dotfiles/.config/nvim/coc-settings.json<cr>
