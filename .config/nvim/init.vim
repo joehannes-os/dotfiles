@@ -9,6 +9,8 @@ endif
 
 call plug#begin()
 
+" Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+
 Plug 'voldikss/vim-skylight'
 
 let g:skylight_height = 0.9
@@ -317,9 +319,9 @@ nnoremap <silent> <space>lt  :<C-u>CocList todolist<cr>
 nnoremap <silent> <space>lf  :<C-u>CocList grep<cr>
 nnoremap <silent> <space>> :CocCommand session.save<cr>
 nnoremap <silent> <space>< :CocCommand session.load<CR>
-nnoremap <silent> <space>mt :CocCommand bookmark.toggle<CR>
-nnoremap <silent> <space>mk :CocCommand bookmark.prev<CR>
-nnoremap <silent> <space>mj :CocCommand bookmark.next<CR>
+nnoremap <silent> <space>tm :CocCommand bookmark.toggle<CR>
+nnoremap <silent> <space>[m :CocCommand bookmark.prev<CR>
+nnoremap <silent> <space>]m :CocCommand bookmark.next<CR>
 
 " Snippets
 " --------
@@ -408,16 +410,18 @@ endfunction
 
 " git specific stuff
 " ------------------
-
 " navigate chunks of current buffer
 nmap [g <Plug>(coc-git-prevchunk)
 nmap ]g <Plug>(coc-git-nextchunk)
+" navigate conflicts of current buffer
+nmap [c <Plug>(coc-git-prevconflict)
+nmap ]c <Plug>(coc-git-nextconflict)
 " show chunk diff at current position
 nmap <space>Gd <Plug>(coc-git-chunkinfo)
 " show commit contains current position
 nmap <space>Gc <Plug>(coc-git-commit)
 
-nnoremap <silent> <space>Gs  :<C-u>CocList --normal gstatus<CR>
+nnoremap <silent> <space>lGs  :<C-u>CocList --normal gstatus<CR>
 
 " completion specific stuff
 " -------------------------
@@ -566,7 +570,7 @@ highlight link WintabsInactiveNC TabLine
 
 " Plug 'qpkorr/vim-bufkill'
 Plug 'wakatime/vim-wakatime'
-" Plug 'mhinz/vim-startify'
+Plug 'mhinz/vim-startify'
 
 Plug 'easymotion/vim-easymotion'
 
@@ -620,7 +624,7 @@ Plug 'arithran/vim-delete-hidden-buffers'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
-let $FZF_DEFAULT_OPTS = '--layout=reverse'
+let $FZF_DEFAULT_OPTS = '--layout=reverse --preview="bat --style=numbers --color=always --line-range :500 {}"'
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 function! OpenFloatingWin()
@@ -654,8 +658,8 @@ let g:fzf_layout = { 'window': 'call OpenFloatingWin()' }
 
 nnoremap <space>; :GFiles?<cr>
 nnoremap ; :GFiles --recurse-submodules<Cr>
-nnoremap <space>lH :History<CR>
-nnoremap <space>lF :Ag .<CR>
+nnoremap <space>fH :History<CR>
+nnoremap <space>fFf :Ag .<CR>
 
 "   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
 "   :Ag! - Start fzf in fullscreen and display the preview window above
@@ -666,7 +670,7 @@ command! -bang -nargs=* Ag
   \                 <bang>0)
 
 function! SearchWithAgInDirectory(...)
-  call fzf#vim#ag(join(a:000[1:], ' '), extend({'dir': a:1}, g:fzf#vim#with_preview('up:75%','?')), 1)
+  call fzf#vim#ag(join(a:000[1:], ' '), extend({'dir': a:1}, g:fzf#vim#with_preview('up:75%', '?')))
 endfunction
 command! -nargs=+ -complete=dir AgIn call SearchWithAgInDirectory(<f-args>)
 
@@ -674,9 +678,10 @@ function! SearchDevDocsAg()
   call SearchWithAgInDirectory('~/.manu-pages/md-detailled/')
 endfunction
 
-nnoremap <silent> <space>fK :call SearchDevDocsAg()<cr>
+nnoremap <silent> <space>fK :call system('fuzzyDevDocsTmuxSplit')<cr>
 nnoremap <silent> <space>fTb :CocCommand fzf-preview.BufferTags<cr>
-nnoremap <silent> <space>ff :CocCommand fzf-preview.BufferLines<cr>
+nnoremap <silent> <space>fl :CocCommand fzf-preview.Lines<cr>
+nnoremap <silent> <space>fLb :CocCommand fzf-preview.BufferLines<cr>
 nnoremap <silent> <space>fm :CocCommand fzf-preview.Marks<cr>
 
 Plug 'fszymanski/fzf-gitignore', {'do': ':UpdateRemotePlugins'}
@@ -778,7 +783,12 @@ let g:floaterm_winblend=10
 nnoremap <space>tt :FloatermToggle<CR>
 tnoremap <space>tt <C-\><C-n>:FloatermToggle<cr>
 inoremap <space>tt <C-\><C-n>:FloatermToggle<cr>
-nnoremap <space>ct :CocCommand floaterm.new<CR>
+nnoremap <space>Tn :CocCommand floaterm.new<cr>
+tnoremap <space>Tn <C-\><C-n>:CocCommand floaterm.new<cr>
+nnoremap ]t :CocCommand floaterm.next<cr>
+nnoremap [t :CocCommand floaterm.prev<cr>
+tnoremap ]t <c-\><c-n>:CocCommand floaterm.next<cr>
+tnoremap [t <c-\><c-n>:CocCommand floaterm.prev<cr>
 nnoremap <space>lt :CocList floaterm<cr>
 
 " Plug 'fmoralesc/nlanguagetool.nvim'
@@ -1027,6 +1037,8 @@ function! WinMove(key)
         exec "wincmd ".a:key
     endif
 endfunction
+
+let g:netrw_http_cmd = "elinks4vim"
 
 " use system clipboard
 if has('unnamedplus')

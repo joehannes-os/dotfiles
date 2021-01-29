@@ -1,6 +1,6 @@
-# /home/joehannes/.config/tmuxinator/manual.yml
+# /home/joehannes/.config/tmuxinator/regular.yml
 
-name: "הישׁמה הושׁי"
+name: regular
 root: ~/.local/git
 
 # Optional tmux socket
