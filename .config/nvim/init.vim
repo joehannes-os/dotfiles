@@ -11,6 +11,15 @@ call plug#begin()
 
 " Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 
+Plug 'wellle/context.vim'
+
+nnoremap <silent> <space>tC :ContextToggle<CR>
+
+Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
+
+nnoremap <space>tFt <cmd>CHADopen<cr>
+nnoremap <space>xl <cmd>call setqflist([])<cr>
+
 Plug 'voldikss/vim-skylight'
 
 let g:skylight_height = 0.9
@@ -55,7 +64,7 @@ let g:vrc_curl_opts = {
 " \ '-b': '/path/to/cookie', \ '-c': '/path/to/cookie',
 
 nnoremap <space>ta :edit ~/.local/snippets/vim.rest<CR>
-nnoremap <space>xa :call VrcQuery()<CR>
+nnoremap <space>ra :call VrcQuery()<CR>
 
 Plug 'Konfekt/Fastfold'
 
@@ -301,7 +310,7 @@ command! -nargs=0 Prettier :CocCommand prettier.formatFile
 " Using CocList
 " Show all diagnostics
 nnoremap <silent> <space>ld  :<C-u>CocList diagnostics<cr>
-" //TODO: add filter to not show cspell diagnostic ... more shortcuts
+" //@TODO: add filter to not show cspell diagnostic ... more shortcuts
 " Show commands
 nnoremap <silent> <space>lx  :<C-u>CocList commands<cr>
 " Find symbol of current document
@@ -363,7 +372,7 @@ nmap <space>af  <Plug>(coc-fix-current)
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Remap for rename current word
-nmap <space>fr <Plug>(coc-rename)
+nmap <space>Rr <Plug>(coc-rename)
 
 " formatting related stuff
 " ------------------------
@@ -417,9 +426,13 @@ nmap ]g <Plug>(coc-git-nextchunk)
 nmap [c <Plug>(coc-git-prevconflict)
 nmap ]c <Plug>(coc-git-nextconflict)
 " show chunk diff at current position
-nmap <space>Gd <Plug>(coc-git-chunkinfo)
+nmap <space>Gi <Plug>(coc-git-chunkinfo)
 " show commit contains current position
 nmap <space>Gc <Plug>(coc-git-commit)
+" stage current git chunk
+nnoremap <silent> <space>Gs :<C-u>CocCommand git.chunkStage<CR>
+" undo current git chunk
+nnoremap <silent> <space>Gu :<C-u>CocCommand git.chunkUndo<CR>
 
 nnoremap <silent> <space>lGs  :<C-u>CocList --normal gstatus<CR>
 
@@ -492,7 +505,6 @@ let g:vista#renderer#icons = {
 " toggle structural view
 nnoremap <space>tO :Vista!!<cr>
 nnoremap <leader>Oo :Vista coc<cr>
-nnoremap <leader>Oc :Vista!!<cr>
 
 " toggle fuzzy in buffer tag finder
 nnoremap <space>ft :Vista finder! coc<CR>
@@ -659,7 +671,7 @@ let g:fzf_layout = { 'window': 'call OpenFloatingWin()' }
 nnoremap <space>; :GFiles?<cr>
 nnoremap ; :GFiles --recurse-submodules<Cr>
 nnoremap <space>fH :History<CR>
-nnoremap <space>fFf :Ag .<CR>
+nnoremap <space>fFf :Rg .<CR>
 
 "   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
 "   :Ag! - Start fzf in fullscreen and display the preview window above
@@ -783,8 +795,8 @@ let g:floaterm_winblend=10
 nnoremap <space>tt :FloatermToggle<CR>
 tnoremap <space>tt <C-\><C-n>:FloatermToggle<cr>
 inoremap <space>tt <C-\><C-n>:FloatermToggle<cr>
-nnoremap <space>Tn :CocCommand floaterm.new<cr>
-tnoremap <space>Tn <C-\><C-n>:CocCommand floaterm.new<cr>
+nnoremap <space>tn :CocCommand floaterm.new<cr>
+tnoremap <space>tn <C-\><C-n>:CocCommand floaterm.new<cr>
 nnoremap ]t :CocCommand floaterm.next<cr>
 nnoremap [t :CocCommand floaterm.prev<cr>
 tnoremap ]t <c-\><c-n>:CocCommand floaterm.next<cr>
@@ -818,6 +830,9 @@ Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-fugitive'
 
 nnoremap <space>tG :<C-u>Gblame<cr>
+nnoremap <silent> <space>Gg :<C-u>Git<CR>
+
+
 " Plug 'Chun-Yang/vim-action-ag'
 Plug 'editorconfig/editorconfig-vim'
 
