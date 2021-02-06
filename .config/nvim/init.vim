@@ -830,8 +830,10 @@ Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-fugitive'
 
 nnoremap <space>tG :<C-u>Gblame<cr>
-nnoremap <silent> <space>Gg :<C-u>Git<CR>
-
+nnoremap <silent> <space>Gs :<C-u>Git<CR>
+nnoremap <silent> <space>Gd :<C-u>Git difftool<CR>
+nnoremap <silent> <space>Gm :<C-u>Git mergtool<CR>
+nnoremap <silent> <space>Gp :<C-u>Git push<CR>
 
 " Plug 'Chun-Yang/vim-action-ag'
 Plug 'editorconfig/editorconfig-vim'
