@@ -11,6 +11,23 @@ call plug#begin()
 
 " Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 
+Plug 'puremourning/vimspector'
+
+" let g:vimspector_enable_mappings = 'HUMAN' " default mappings that use the
+" ol' fancy F1-12 keys
+
+nmap <space>d<space> <Plug>VimspectorContinue<CR>
+nmap <space>d<esc> <Plug>VimspectorStop<CR>
+nmap <space>d<c-CR> <Plug>VimSpectorRestart<CR>
+nmap <space>d<c-space> <Plug>VimspectorPause<CR>
+nmap <space>tb <Plug>VimspectorToggleBreakpoint<CR>
+nmap <space>tBc <Plug>VimspectorToggleConditionalBreakpoint<CR>
+nmap <space>tBf <Plug>VimspectorAddFunctionalBreakpoint<CR>
+nmap <space>dl <Plug>VimspectorStepOver<CR>
+nmap <space>dj <Plug>VimspectorStepInto<CR>
+nmap <space>dk <Plug>VimspectorStepOut<CR>
+nmap <space>d<CR> <Plug>VimSpectorRunToCursor<CR>
+
 Plug 'wellle/context.vim'
 
 nnoremap <silent> <space>tC :ContextToggle<CR>
