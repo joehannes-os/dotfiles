@@ -1,10 +1,17 @@
-export TERM="screen-256color"
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+export TERM="xterm-256color"
 
 # GO packages path
 export GOPATH=/home/joehannes/go
 
 # default web browser for stuff like ddgr, googler
-export BROWSER=/usr/bin/lynx
+export BROWSER=$(which google-chrome-stable)
 
 # JAVA_HOME
 export JAVA_HOME=/usr/lib/jvm/default-java
@@ -124,9 +131,15 @@ alias ohmybugcfg="nvim ~/.config/bugwarrior/bugwarriorrc"
 alias ohmytmuxcfg="nvim ~/.tmux.conf.local"
 alias ohmymux="txs regular"
 alias ohmymutt="nvim ~/.neomuttrc"
+alias chrome="$(which google-chrome-stable) --remote-debugging-port=9222"
 
 txq() {
 	tmuxinator stop $1;
+}
+
+# unmerited favor king of kings
+ufkk() {
+  tmuxinator start "חישמה עושי";
 }
 
 ~() {
@@ -147,18 +160,52 @@ source ~/.local/bin/tmuxinator.zsh
 # gtm plugin
 source ~/.local/bin/gtm-plugin.sh
 
-# zsh shnippets
-source ~/.local/git/zshnip/zshnip.zsh
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 nvm use --silent default
 
-source "$HOME/.local/git/zsh-system-clipboard/zsh-system-clipboard.zsh"
-typeset -g ZSH_SYSTEM_CLIPBOARD_TMUX_SUPPORT='true'
-
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
 source ~/.rvm/scripts/rvm
+rvm use 2.6.5
+
+# $:404 => echo "... brief status code explanation"
+source ~/.local/bin/http_status_codes.zsh
+
+eval "$(fasd --init auto)"
+
+export MAD_PATH=~/.manu-pages/md
+
+# ZPlug Section
+
+source $HOME/.zplug/init.zsh
+
+if ! zplug check; then
+    zplug install
+fi
+
+zplug "modules/prompt", from:prezto
+zplug "b4b4r07/enhancd"
+
+if zplug check b4b4r07/enhancd; then
+    # setting if enhancd is available
+    export ENHANCD_FILTER=fzf-tmux
+fi
+
+zplug "tmux-plugins/tmux-yank"
+zplug "wfxr/tmux-fzf-url"
+
+zplug "facetframer/zshnip"
+zplug "kutsan/zsh-system-clipboard"
+
+if zplug check kutsan/zsh-system-clipboard; then
+  typeset -g ZSH_SYSTEM_CLIPBOARD_TMUX_SUPPORT='true'
+fi
+
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+[ -f /home/joehannes/.config/cani/completions/_cani.zsh ] && source /home/joehannes/.config/cani/completions/_cani.zsh

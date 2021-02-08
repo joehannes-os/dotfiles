@@ -11,15 +11,19 @@ call plug#begin()
 
 " Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 
+Plug 'gko/vim-coloresque'
+
 Plug 'puremourning/vimspector'
 
 " let g:vimspector_enable_mappings = 'HUMAN' " default mappings that use the
 " ol' fancy F1-12 keys
 
+let g:vimspector_install_gadgets = [ 'debugger-for-chrome' ]
+
 nmap <space>d<space> <Plug>VimspectorContinue<CR>
 nmap <space>d<esc> <Plug>VimspectorStop<CR>
 nmap <space>d<c-CR> <Plug>VimSpectorRestart<CR>
-nmap <space>d<c-space> <Plug>VimspectorPause<CR>
+nmap <space>d<backspace> <Plug>VimspectorPause<CR>
 nmap <space>tb <Plug>VimspectorToggleBreakpoint<CR>
 nmap <space>tBc <Plug>VimspectorToggleConditionalBreakpoint<CR>
 nmap <space>tBf <Plug>VimspectorAddFunctionalBreakpoint<CR>
@@ -34,7 +38,7 @@ nnoremap <silent> <space>tC :ContextToggle<CR>
 
 Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
 
-nnoremap <space>tFt <cmd>CHADopen<cr>
+nnoremap <space>t; <cmd>CHADopen<cr>
 nnoremap <space>xl <cmd>call setqflist([])<cr>
 
 Plug 'voldikss/vim-skylight'
@@ -599,7 +603,7 @@ highlight link WintabsInactiveNC TabLine
 
 " Plug 'qpkorr/vim-bufkill'
 Plug 'wakatime/vim-wakatime'
-Plug 'mhinz/vim-startify'
+" Plug 'mhinz/vim-startify'
 
 Plug 'easymotion/vim-easymotion'
 
@@ -812,8 +816,8 @@ let g:floaterm_winblend=10
 nnoremap <space>tt :FloatermToggle<CR>
 tnoremap <space>tt <C-\><C-n>:FloatermToggle<cr>
 inoremap <space>tt <C-\><C-n>:FloatermToggle<cr>
-nnoremap <space>tn :CocCommand floaterm.new<cr>
-tnoremap <space>tn <C-\><C-n>:CocCommand floaterm.new<cr>
+nnoremap <space>Tn :CocCommand floaterm.new<cr>
+tnoremap <space>Tn <C-\><C-n>:CocCommand floaterm.new<cr>
 nnoremap ]t :CocCommand floaterm.next<cr>
 nnoremap [t :CocCommand floaterm.prev<cr>
 tnoremap ]t <c-\><c-n>:CocCommand floaterm.next<cr>
@@ -832,7 +836,7 @@ Plug 'HerringtonDarkholme/yats.vim'
 " Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'm00qek/nvim-contabs'
 
-let g:contabs#integrations#tabline#theme = 'project/path'
+" contabs#integrations#tabline#theme = 'project/path'
 let g:contabs#project#locations = [
       \  { 'path': '~/.local/git/', 'depth': 2, 'git_only': v:true },
       \  { 'path': '~/.local/git/playground', 'depth': 0, 'git_only': v:false, 'formatter': { _ -> 'playground' } },
@@ -855,94 +859,126 @@ nnoremap <silent> <space>Gp :<C-u>Git push<CR>
 " Plug 'Chun-Yang/vim-action-ag'
 Plug 'editorconfig/editorconfig-vim'
 
-Plug 'rbong/vim-crystalline'
-
-function! StatusLine(current, width)
-  let l:s = ''
-
-  if a:current
-    let l:s .= crystalline#mode() . crystalline#right_mode_sep('')
-  else
-    let l:s .= '%#CrystallineInactive#'
-  endif
-  let l:s .= ' %f%h%w%m%r '
-  if a:current
-    let l:s .= crystalline#right_sep('', 'Fill') . ' %{fugitive#head()}' . "%{get(g:,'coc_git_status','')}" . ' %{get(b:,"coc_git_blame","")}'
-  endif
-
-  let l:s .= '%='
-  if a:current
-    let l:s .= crystalline#left_sep('', 'Fill') . "%{StatusDiagnostic()}%{exists('*GTMStatusline')?'['.GTMStatusline().']':''}" . ' %{&paste ?"PASTE ":""}%{&spell?"SPELL ":""}'
-    let l:s .= crystalline#left_mode_sep('')
-  endif
-  if a:width > 80
-    let l:s .= ' %{&ft}[%{&fenc!=#""?&fenc:&enc}][%{&ff}] %l/%L %c%V %P '
-  else
-    let l:s .= ' '
-  endif
-
-  return l:s
-endfunction
-
-function! TabLine()
-  let l:vimlabel = has('nvim') ?  ' NVIM ' : ' VIM '
-  return crystalline#bufferline(2, len(l:vimlabel), 1) . '%=%#CrystallineTab# ' . l:vimlabel
-endfunction
-
-let g:crystalline_enable_sep = 1
-let g:crystalline_statusline_fn = 'StatusLine'
-let g:crystalline_tabline_fn = 'TabLine'
-let g:crystalline_theme = 'molokai'
-
-set statusline=%!StatusLine()
-set tabline=%!TabLine()
-set showtabline=2
-set guioptions-=e
-set laststatus=2
-
-
-"Plug 'itchyny/lightline.vim'
-
-" autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+" Plug 'rbong/vim-crystalline'
 "
-" function! LightlineGitBlame() abort
-"   let blame = get(b:, 'coc_git_blame', '')
-"   " return blame
-"   return winwidth(0) > 120 ? blame : ''
+" function! StatusLine(current, width)
+"   let l:s = ''
+"
+"   if a:current
+"     let l:s .= crystalline#mode() . crystalline#right_mode_sep('')
+"   else
+"     let l:s .= '%#CrystallineInactive#'
+"   endif
+"   let l:s .= ' %f%h%w%m%r '
+"   if a:current
+"     let l:s .= crystalline#right_sep('', 'Fill') . ' %{fugitive#head()}'
+"   endif
+"
+"   let l:s .= '%='
+"   if a:current
+"     let l:s .= crystalline#left_sep('', 'Fill') . ' %{&paste ?"PASTE ":""}%{&spell?"SPELL ":""}'
+"     let l:s .= crystalline#left_mode_sep('')
+"   endif
+"   if a:width > 80
+"     let l:s .= ' %{&ft}[%{&fenc!=#""?&fenc:&enc}][%{&ff}] %l/%L %c%V %P '
+"   else
+"     let l:s .= ' '
+"   endif
+"
+"   return l:s
 " endfunction
 "
-" let g:lightline = {
-"   \ 'active': {
-"   \   'left': [
-"   \     [ 'mode', 'paste'],
-"   \     [ 'filename', 'method' ]
-"   \   ],
-"   \   'right':[
-"   \     [ 'filetype', 'fileencoding', 'lineinfo', 'percent'],
-"   \     [ 'git', 'blame', 'diagnostic', 'cocstatus' ],
-"   \     [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]
-"   \   ],
-"   \ },
-"   \ 'component_function': {
-"   \   'blame': 'LightlineGitBlame',
-" 	\		'cocstatus': 'coc#status',
-"   \   'method': 'NearestMethodOrFunction',
-" 	\   'colorscheme': 'powerline'
-" 	\ }
-" \ }
+" function! TabLine()
+"   return crystalline#bufferline(2, 0, 1) . '%=%#CrystallineTab# '
+" endfunction
 "
-" let g:lightline.separator = {
-" \   'left': '', 'right': ''
-" \}
+" let g:crystalline_enable_sep = 1
+" let g:crystalline_statusline_fn = 'StatusLine'
+" let g:crystalline_tabline_fn = 'TabLine'
+" let g:crystalline_theme = 'molokai'
 "
-" let g:lightline.subseparator = {
-" \   'left': '', 'right': ''
-" \}
-"
-" let g:lightline.tabline = {
-" \   'left': [ ['tabs'] ],
-" \   'right': [ ['close'] ]
-" \ }
+" set statusline=
+" set tabline=%!TabLine()
+" set guioptions-=e
+
+" autocmd BufEnter,WinEnter * setlocal statusline=%!StatusLine()
+" autocmd BufLeave,WinLeave * setlocal statusline=
+
+Plug 'itchyny/lightline.vim'
+
+autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+
+function! LightlineGitBlame() abort
+  let blame = get(b:, 'coc_git_blame', '')
+  return blame
+endfunction
+
+function! LightlineFileformat()
+  return &fileformat
+endfunction
+
+function! LightlineFiletype()
+  return  (&filetype !=# '' ? &filetype : '.???')
+endfunction
+
+function! LightlineFilename()
+  let filename = expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+  let modified = &modified ? ' +' : ''
+  return filename . modified
+endfunction
+
+function! CocCurrentFunction()
+    return get(b:, 'coc_current_function', '')
+endfunction
+
+function! StatusDiagnostic() abort
+  let info = get(b:, 'coc_diagnostic_info', {})
+  if empty(info) | return '' | endif
+  let msgs = []
+  if get(info, 'error', 0)
+    call add(msgs, 'E' . info['error'])
+  endif
+  if get(info, 'warning', 0)
+    call add(msgs, 'W' . info['warning'])
+  endif
+  return join(msgs, ' '). ' ' . get(g:, 'coc_status', '')
+endfunction
+
+let g:lightline = {
+  \ 'colorscheme': 'seoul256',
+  \ 'active': {
+  \   'left': [
+  \     [ 'mode', 'paste'],
+  \     [ 'filename', 'method' ],
+  \     [ 'gitbranch', 'blame', 'diagnostic' ]
+  \   ],
+  \   'right':[
+  \     [ 'filetype', 'fileencoding', 'lineinfo', 'percent'],
+  \   ],
+  \ },
+  \ 'component_function': {
+  \   'diagnostic': 'StatusDiagnostic',
+  \   'filename': 'LightlineFilename',
+  \   'filetype': 'LightlineFiletype',
+  \   'gitbranch': 'FugitiveHead',
+  \   'blame': 'LightlineGitBlame',
+	\		'cocstatus': 'coc#status',
+  \   'method': 'CocCurrentFunction',
+	\ }
+\ }
+
+let g:lightline.separator = {
+\   'left': '', 'right': ''
+\}
+
+let g:lightline.subseparator = {
+\   'left': '', 'right': ''
+\}
+
+let g:lightline.tabline = {
+\   'left': [ ['tabs'] ],
+\   'right': [ ['close'] ]
+\ }
 
 "Plug 'maximbaz/lightline-ale'
 " Plug 'terryma/vim-multiple-cursors'
@@ -1093,10 +1129,16 @@ set number relativenumber
 set termguicolors
 set guifont=Fira\ Mono
 " too many statusline items
-" set statusline+="%{get(g:,'coc_git_status','')}"
-" set statusline+="%{get(b:,'coc_git_blame','')}"
-" set statusline+="%{StatusDiagnostic()}%{exists('*GTMStatusline')?'['.GTMStatusline().']':''}\ %<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P"
-" set statusline+="%{NearestMethodOrFunction()}"
+" set statusline=
+" set statusline+=%{get(g:,'coc_git_status','')}.
+" set statusline+=%{get(g:,'coc_git_blame','')}.
+" set statusline+=%{StatusDiagnostic()}%{exists('*GTMStatusline')?'['.GTMStatusline().']':''}\ %<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P.
+" set statusline+=%{NearestMethodOrFunction()}
+
+set tabline=%!contabs#integrations#tabline#create()
+
+set showtabline=2
+set laststatus=2
 
 set directory=/tmp
 set nobackup
@@ -1113,14 +1155,15 @@ set signcolumn=yes
 set mouse=a mousemodel=popup
 set tabstop=2 softtabstop=0 shiftwidth=2 expandtab
 
-let g:tablineclosebutton=1
-" set tabline=%!contabs#integrations#tabline#create()
-
 let g:Powerline_symbols = 'fancy'
 
-hi TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
-hi TabLine ctermfg=Blue ctermbg=Yellow
-hi TabLineSel ctermfg=DarkGreen ctermbg=Magenta
+hi CursorLine cterm=NONE ctermbg=black ctermfg=white guibg=#511348
+
+augroup CursorLine
+  au!
+  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  au WinLeave * setlocal nocursorline
+augroup END
 
 augroup numbertoggle
   autocmd!

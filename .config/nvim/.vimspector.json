@@ -1,0 +1,19 @@
+{
+  "configurations": {
+    "launch": {
+      "adapter": "chrome",
+      "configuration": {
+        "request": "launch",
+        "url": "http://localhost:3000/",
+        "webRoot": "${workspaceRoot}/public"
+      }
+    },
+    "attach": {
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "url": "http://localhost:3000/",
+      "webRoot": "${workspaceRoot}/public"
+    }
+  }
+}
