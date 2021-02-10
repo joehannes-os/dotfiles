@@ -46,7 +46,7 @@ Plug 'voldikss/vim-skylight'
 let g:skylight_height = 0.9
 let g:skylight_position = 'right'
 
-nnoremap <silent> <space>jP :SkylightPreview<CR>
+nnoremap <silent> <space>jP :Skylight<CR>
 nnoremap <silent><expr> <a-j> skylight#float#has_scroll() ? skylight#float#scroll(1, 10) : "\<C-f>"
 nnoremap <silent><expr> <a-k> skylight#float#has_scroll() ? skylight#float#scroll(0, 10) : "\<C-b>"
 
@@ -1008,7 +1008,7 @@ let g:gutentags_file_list_command = 'rg --files'
 let g:gutentags_modules = ['ctags']
 
 let g:gutentags_cache_dir = expand('~/.local/tags')
-let g:tagbar_ctags_bin = '/home/linuxbrew/.linuxbrew/bin/ctags'
+let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
 
 " Plug 'majutsushi/tagbar'
 "

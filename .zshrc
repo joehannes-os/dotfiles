@@ -132,6 +132,7 @@ alias ohmytmuxcfg="nvim ~/.tmux.conf.local"
 alias ohmymux="txs regular"
 alias ohmymutt="nvim ~/.neomuttrc"
 alias chrome="$(which google-chrome-stable) --remote-debugging-port=9222"
+alias hack="/home/linuxbrew/.linuxbrew/bin/nvim"
 
 txq() {
 	tmuxinator stop $1;

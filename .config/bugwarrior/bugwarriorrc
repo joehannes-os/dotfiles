@@ -3,7 +3,7 @@
 # Here you define a comma separated list of targets.  Each of them must have a
 # section below determining their properties, how to query them, etc.  The name
 # is just a symbol, and doesn't have any functional importance.
-targets = github_manual-of-life, github_prudencss, github_joehannes
+targets = github_prudencss, github_joehannes
 #, github_manual-of-life ... not working due to 2-factor-auth
 
 # If unspecified, the default taskwarrior config will be used.
@@ -160,7 +160,8 @@ github.username = prudencss
 #   issues for.  It could be you, or some other user entirely.
 github.login = joehannes
 github.password = @oracle:use_keyring
-
+github.include_repos = True
+github.include_issues = True
 
 
 #[bambus_jira]
