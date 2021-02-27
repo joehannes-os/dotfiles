@@ -9,7 +9,23 @@ endif
 
 call plug#begin()
 
+" Plug 'camspiers/animate.vim' "having issues with coclist;
+Plug 'camspiers/lens.vim'
+
 " Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+
+Plug 'APZelos/blamer.nvim'
+
+let g:blamer_enabled = 1
+let g:blamer_delay = 500
+let g:blamer_prefix = ' >>> '
+" let g:blamer_template = '<committer> <summary>'
+" let g:blamer_date_format = '%d/%m/%y'
+" let g:blamer_relative_time = 1
+
+highlight Blamer guifg=lightgrey
+
+nnoremap <silent> <space>GB :BlamerHide<CR>:BlamerShow<CR>
 
 Plug 'gko/vim-coloresque'
 
@@ -18,7 +34,7 @@ Plug 'puremourning/vimspector'
 " let g:vimspector_enable_mappings = 'HUMAN' " default mappings that use the
 " ol' fancy F1-12 keys
 
-let g:vimspector_install_gadgets = [ 'debugger-for-chrome' ]
+let g:vimspector_install_gadgets = [ 'debugger-for-chrome', 'vscode-node-debug2' ]
 
 nmap <space>d<space> <Plug>VimspectorContinue<CR>
 nmap <space>d<esc> <Plug>VimspectorStop<CR>
@@ -156,6 +172,12 @@ nnoremap <leader>H <C-w>\<>
 " Plug 'joehannes-ux/vim-one'
 " Plug 'kaicataldo/material.vim'
 " Plug 'vim-scripts/summerfruit256.vim'
+Plug 'sainnhe/edge'
+Plug 'Th3Whit3Wolf/space-nvim'
+Plug 'NLKNguyen/papercolor-theme'
+
+set t_Co=256
+
 Plug 'patstockwell/vim-monokai-tasty'
 
 let g:vim_monokai_tasty_italic = 1
@@ -193,13 +215,18 @@ hi link illuminatedWord Visual
 Plug 'nightsense/night-and-day'
 
 let g:nd_themes = [
-  \ ['sunrise+0', 'space_vim_theme', 'dark' ],
+  \ ['sunrise+0', 'edge', 'light' ],
   \ ['sunset+0', 'vim-monokai-tasty', '' ],
 \ ]
 
 " Europe/Austria/Vienna
 let g:nd_latitude = '50'
-let g:nd_timeshift = '63'
+
+if strftime("%m") > 3 && strftime("%m") < 11
+  let g:nd_timeshift = '38'
+else
+  let g:nd_timeshift = '-22'
+endif
 
 Plug 'git-time-metric/gtm-vim-plugin'
 
@@ -213,26 +240,102 @@ Plug 'fergdev/vim-cursor-hist'
 nnoremap <leader>j :call g:CursorHistForward()<CR>
 nnoremap <leader>k :call g:CursorHistBack()<CR>
 
-" vim-markdown-composer
-" function! BuildComposer(info)
-"   if a:info.status != 'unchanged' || a:info.force
-"     if has('nvim')
-"       !cargo build --release
-"     else
-"       !cargo build --release --no-default-features --features json-rpc
-"     endif
-"   endif
-" endfunction
-"
-" Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
-"
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
-Plug 'vim-pandoc/vim-pandoc'
-Plug 'vim-pandoc/vim-pandoc-syntax'
+" set to 1, nvim will open the preview window after entering the markdown buffer
+" default: 0
+let g:mkdp_auto_start = 0
 
-augroup pandoc_syntax
-    au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
-augroup END
+" set to 1, the nvim will auto close current preview window when change
+" from markdown buffer to another buffer
+" default: 1
+let g:mkdp_auto_close = 1
+
+" set to 1, the vim will refresh markdown when save the buffer or
+" leave from insert mode, default 0 is auto refresh markdown as you edit or
+" move the cursor
+" default: 0
+let g:mkdp_refresh_slow = 0
+
+" set to 1, the MarkdownPreview command can be use for all files,
+" by default it can be use in markdown file
+" default: 0
+let g:mkdp_command_for_global = 0
+
+" set to 1, preview server available to others in your network
+" by default, the server listens on localhost (127.0.0.1)
+" default: 0
+let g:mkdp_open_to_the_world = 0
+
+" use custom IP to open preview page
+" useful when you work in remote vim and preview on local browser
+" more detail see: https://github.com/iamcco/markdown-preview.nvim/pull/9
+" default empty
+let g:mkdp_open_ip = ''
+
+" specify browser to open preview page
+" default: ''
+let g:mkdp_browser = 'google-chrome-stable'
+
+" set to 1, echo preview page url in command line when open preview page
+" default is 0
+let g:mkdp_echo_preview_url = 0
+
+" a custom vim function name to open preview page
+" this function will receive url as param
+" default is empty
+let g:mkdp_browserfunc = ''
+
+" options for markdown render
+" mkit: markdown-it options for render
+" katex: katex options for math
+" uml: markdown-it-plantuml options
+" maid: mermaid options
+" disable_sync_scroll: if disable sync scroll, default 0
+" sync_scroll_type: 'middle', 'top' or 'relative', default value is 'middle'
+"   middle: mean the cursor position alway show at the middle of the preview page
+"   top: mean the vim top viewport alway show at the top of the preview page
+"   relative: mean the cursor position alway show at the relative positon of the preview page
+" hide_yaml_meta: if hide yaml metadata, default is 1
+" sequence_diagrams: js-sequence-diagrams options
+" content_editable: if enable content editable for preview page, default: v:false
+" disable_filename: if disable filename header for preview page, default: 0
+let g:mkdp_preview_options = {
+    \ 'mkit': {},
+    \ 'katex': {},
+    \ 'uml': {},
+    \ 'maid': {},
+    \ 'disable_sync_scroll': 0,
+    \ 'sync_scroll_type': 'middle',
+    \ 'hide_yaml_meta': 1,
+    \ 'sequence_diagrams': {},
+    \ 'flowchart_diagrams': {},
+    \ 'content_editable': v:false,
+    \ 'disable_filename': 0
+    \ }
+
+" use a custom markdown style must be absolute path
+" like '/Users/username/markdown.css' or expand('~/markdown.css')
+let g:mkdp_markdown_css = ''
+
+" use a custom highlight style must absolute path
+" like '/Users/username/highlight.css' or expand('~/highlight.css')
+let g:mkdp_highlight_css = ''
+
+" use a custom port to start server or random for empty
+let g:mkdp_port = ''
+
+" preview page title
+" ${name} will be replace with the file name
+let g:mkdp_page_title = '「${name}」'
+
+" recognized filetypes
+" these filetypes will have MarkdownPreview... commands
+let g:mkdp_filetypes = ['markdown']
+
+nmap <space>tM <Plug>MarkdownPreviewToggle
+nmap <space>M <Plug>MarkdownPreview
+nmap <space>qM <Plug>MarkdownPreviewStop
 
 Plug 'frazrepo/vim-rainbow'
 
@@ -301,7 +404,6 @@ let g:coc_global_extensions = [
 			\'coc-css',
 			\'coc-css-block-comments',
 			\'coc-browser',
-			\'coc-bookmark',
 			\'coc-angular',
 			\'coc-actions',
       \'coc-floaterm',
@@ -548,6 +650,7 @@ map <space>wo <Plug>(wintabs_only_window)
 
 nnoremap <space>bn :enew<CR>
 nnoremap <space>wn :tabnew<CR>
+nnoremap <space>wq :WintabsCloseVimtab<CR>
 nnoremap [w :tabprevious<cr>
 nnoremap ]w :tabnext<cr>
 
@@ -703,15 +806,12 @@ command! -bang -nargs=* Ag
   \                 <bang>0)
 
 function! SearchWithAgInDirectory(...)
-  call fzf#vim#ag(join(a:000[1:], ' '), extend({'dir': a:1}, g:fzf#vim#with_preview('up:75%', '?')))
+  call fzf#vim#ag(join(a:000[1:], ' '), extend({'dir': a:1}, g:fzf#vim#with_preview('up:80%', '?')), 1)
 endfunction
 command! -nargs=+ -complete=dir AgIn call SearchWithAgInDirectory(<f-args>)
 
-function! SearchDevDocsAg()
-  call SearchWithAgInDirectory('~/.manu-pages/md-detailled/')
-endfunction
+nnoremap <silent> <space>fK :AgIn ~/.manu-pages/md-detailled/<cr>
 
-nnoremap <silent> <space>fK :call system('fuzzyDevDocsTmuxSplit')<cr>
 nnoremap <silent> <space>fTb :CocCommand fzf-preview.BufferTags<cr>
 nnoremap <silent> <space>fl :CocCommand fzf-preview.Lines<cr>
 nnoremap <silent> <space>fLb :CocCommand fzf-preview.BufferLines<cr>
@@ -825,10 +925,12 @@ tnoremap [t <c-\><c-n>:CocCommand floaterm.prev<cr>
 nnoremap <space>lt :CocList floaterm<cr>
 
 " Plug 'fmoralesc/nlanguagetool.nvim'
-Plug 'sheerun/vim-polyglot'
+" Plug 'sheerun/vim-polyglot'
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
 Plug 'roxma/vim-tmux-clipboard'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'HerringtonDarkholme/yats.vim'
 "Plug 'mhartington/nvim-typescript', { 'do': './install.sh' }
 " Plug 'autozimu/LanguageClient-neovim'
 "Plug 'jalvesaq/vimcmdline'
@@ -850,11 +952,12 @@ Plug 'tomtom/tcomment_vim'
 " Plug 'rking/ag.vim'
 Plug 'tpope/vim-fugitive'
 
-nnoremap <space>tG :<C-u>Gblame<cr>
+nnoremap <silent> <space>tG :<C-u>Git blame<cr>
 nnoremap <silent> <space>Gs :<C-u>Git<CR>
 nnoremap <silent> <space>Gd :<C-u>Git difftool<CR>
 nnoremap <silent> <space>Gm :<C-u>Git mergtool<CR>
 nnoremap <silent> <space>Gp :<C-u>Git push<CR>
+nnoremap <silent> <space>GP :<C-u>Git pull<CR>
 
 " Plug 'Chun-Yang/vim-action-ag'
 Plug 'editorconfig/editorconfig-vim'
@@ -981,7 +1084,7 @@ let g:lightline.tabline = {
 \ }
 
 "Plug 'maximbaz/lightline-ale'
-" Plug 'terryma/vim-multiple-cursors'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
@@ -1078,8 +1181,20 @@ Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
 
+" treesitter needs this to be run but outside the plug-block
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    disable = { "c", "rust" },  -- list of language that will be disabled
+  },
+}
+EOF
+
 " useful functions
 " ----------------
+
 function! StatusDiagnostic() abort
 	let info = get(b:, 'coc_diagnostic_info', {})
 	if empty(info)
@@ -1122,6 +1237,12 @@ syntax on
 " nightandday-theme plugin takes care of this
 " colorscheme monokai_pro
 
+if &background ==# 'dark'
+  hi CursorLine cterm=NONE ctermbg=black ctermfg=white guibg=#713368
+else
+  hi CursorLine cterm=NONE ctermbg=black ctermfg=white guibg=#E1B3D8
+endif
+
 set foldmethod=syntax
 set rtp+=/home/joehannes/.config/nvim/gitted/tabnine-vim
 set ruler
@@ -1157,7 +1278,11 @@ set tabstop=2 softtabstop=0 shiftwidth=2 expandtab
 
 let g:Powerline_symbols = 'fancy'
 
-hi CursorLine cterm=NONE ctermbg=black ctermfg=white guibg=#511348
+augroup markdown_syntax
+  au!
+  au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
+  au BufNewFile,BufFilePre,BufRead *.MD set filetype=markdown
+augroup END
 
 augroup CursorLine
   au!

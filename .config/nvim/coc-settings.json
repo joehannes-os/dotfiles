@@ -11,5 +11,6 @@
   "less.validate": false,
   "scss.validate": false,
   "wxss.validate": false,
-	"stylelintplus.autoFixOnFormat": true
+	"stylelintplus.autoFixOnFormat": true,
+	"session.saveOnVimLeave": false
 }
