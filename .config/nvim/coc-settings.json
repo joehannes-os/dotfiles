@@ -1,16 +1,19 @@
 {
-	"prettier.eslintIntegration": true,
-	"prettier.tslintIntegration": true,
-	"prettier.stylelintIntegration": true,
-	"prettier.requireConfig": true,
-	"tslint.configFile": "./tslint.json",
+  "prettier.eslintIntegration": true,
+  "prettier.tslintIntegration": true,
+  "prettier.stylelintIntegration": true,
+  "prettier.requireConfig": true,
+  "tslint.configFile": "./tslint.json",
   "tslint.jsEnable": true,
   "git.enableGutters": true,
-	"snippets.userSnippetsDirectory": "~/.local/snippets",
+  "fit.virtualTextPrefix": " >>> ",
+  "git.addGBlameToVirtualText": true,
+  "git.showCommitInFloating": true,
+  "snippets.userSnippetsDirectory": "~/.local/snippets",
   "css.validate": false,
   "less.validate": false,
   "scss.validate": false,
   "wxss.validate": false,
-	"stylelintplus.autoFixOnFormat": true,
-	"session.saveOnVimLeave": false
+  "stylelintplus.autoFixOnFormat": true,
+  "session.saveOnVimLeave": false
 }

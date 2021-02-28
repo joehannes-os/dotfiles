@@ -9,23 +9,46 @@ endif
 
 call plug#begin()
 
+Plug 'neovim/nvim-lspconfig'
+Plug 'anott03/nvim-lspinstall'
+Plug 'nvim-lua/completion-nvim'
+Plug 'gfanto/fzf-lsp.nvim'
+
+" nnoremap <silent> <space>ft :DocumentSymbols<cr>
+
+Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
+
+let g:minimap_auto_start = 1
+let g:minimap_auto_start_win_enter = 1
+let g:minimap_width = 20
+let g:minimap_highlight = 'MinimapCurrentLine'
+let g:minimap_left = 0
+
+hi MinimapCurrentLine ctermfg=green guifg=#50FA7B guibg=#32302f
+
+nnoremap <silent> <leader>Mn :Minimap<cr>
+nnoremap <silent> <leader>Mq :MinimapClose<cr>
+nnoremap <silent> <leader>Mr :MinimapRefresh<cr>
+
 " Plug 'camspiers/animate.vim' "having issues with coclist;
-Plug 'camspiers/lens.vim'
+" Plug 'camspiers/lens.vim'
+"
+" let g:lens#disabled_filetypes = ['CHADTree', 'fzf', 'minimap']
 
 " Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 
-Plug 'APZelos/blamer.nvim'
-
-let g:blamer_enabled = 1
-let g:blamer_delay = 500
-let g:blamer_prefix = ' >>> '
+" Plug 'APZelos/blamer.nvim'
+"
+" let g:blamer_enabled = 1
+" let g:blamer_delay = 500
+" let g:blamer_prefix = ' >>> '
 " let g:blamer_template = '<committer> <summary>'
 " let g:blamer_date_format = '%d/%m/%y'
 " let g:blamer_relative_time = 1
-
-highlight Blamer guifg=lightgrey
-
-nnoremap <silent> <space>GB :BlamerHide<CR>:BlamerShow<CR>
+"
+" highlight Blamer guifg=lightgrey
+"
+" nnoremap <silent> <space>GB :BlamerHide<CR>:BlamerShow<CR>
 
 Plug 'gko/vim-coloresque'
 
@@ -407,6 +430,7 @@ let g:coc_global_extensions = [
 			\'coc-angular',
 			\'coc-actions',
       \'coc-floaterm',
+      \'coc-react-refactor',
 			\]
 
 " Remap for do codeAction of selected region
@@ -555,9 +579,12 @@ nmap <space>Gc <Plug>(coc-git-commit)
 " stage current git chunk
 nnoremap <silent> <space>Gs :<C-u>CocCommand git.chunkStage<CR>
 " undo current git chunk
-nnoremap <silent> <space>Gu :<C-u>CocCommand git.chunkUndo<CR>
-
+nnoremap <silent> <space>Gu! :<C-u>CocCommand git.chunkUndo<CR>
+" push to remote
+nnoremap <silent> <space>Gp :<C-u>CocCommand git.push<CR>
 nnoremap <silent> <space>lGs  :<C-u>CocList --normal gstatus<CR>
+nnoremap <silent> <space>zc :CocCommand git.foldUnchanged<CR>
+nnoremap <silent> <space>y@ :CocCommand git.copyUrl<CR>
 
 " completion specific stuff
 " -------------------------
@@ -630,7 +657,7 @@ nnoremap <space>tO :Vista!!<cr>
 nnoremap <leader>Oo :Vista coc<cr>
 
 " toggle fuzzy in buffer tag finder
-nnoremap <space>ft :Vista finder! coc<CR>
+nnoremap <space>ft :Vista finder coc<CR>
 
 " autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
 " autocmd vimEnter * Vista
@@ -816,6 +843,10 @@ nnoremap <silent> <space>fTb :CocCommand fzf-preview.BufferTags<cr>
 nnoremap <silent> <space>fl :CocCommand fzf-preview.Lines<cr>
 nnoremap <silent> <space>fLb :CocCommand fzf-preview.BufferLines<cr>
 nnoremap <silent> <space>fm :CocCommand fzf-preview.Marks<cr>
+nnoremap <silent> <space>fc :CocCommand fzf-preview.ProjectGrep @TODO<cr>
+nnoremap <silent> <space>fd :CocCommand fzf-preview.CocCurrentDiagnostics<cr>
+nnoremap <silent> <space>fGs :CocCommand fzf-preview.GitStatus<cr>
+nnoremap <silent> <space>fGa :CocCommand fzf-preview.GitActions<cr>
 
 Plug 'fszymanski/fzf-gitignore', {'do': ':UpdateRemotePlugins'}
 
@@ -952,11 +983,8 @@ Plug 'tomtom/tcomment_vim'
 " Plug 'rking/ag.vim'
 Plug 'tpope/vim-fugitive'
 
-nnoremap <silent> <space>tG :<C-u>Git blame<cr>
-nnoremap <silent> <space>Gs :<C-u>Git<CR>
 nnoremap <silent> <space>Gd :<C-u>Git difftool<CR>
 nnoremap <silent> <space>Gm :<C-u>Git mergtool<CR>
-nnoremap <silent> <space>Gp :<C-u>Git push<CR>
 nnoremap <silent> <space>GP :<C-u>Git pull<CR>
 
 " Plug 'Chun-Yang/vim-action-ag'
@@ -1181,7 +1209,7 @@ Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
 
-" treesitter needs this to be run but outside the plug-block
+" needs to be run but outside the plug-block
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
@@ -1190,7 +1218,12 @@ require'nvim-treesitter.configs'.setup {
     disable = { "c", "rust" },  -- list of language that will be disabled
   },
 }
+require'lspconfig'.pyright.setup{}
+require'lspconfig'.pyls.setup{on_attach=require'completion'.on_attach}
+require'lspconfig'.tsserver.setup{on_attach=require'completion'.on_attach}
+require'fzf_lsp'.setup()
 EOF
+
 
 " useful functions
 " ----------------
@@ -1277,6 +1310,14 @@ set mouse=a mousemodel=popup
 set tabstop=2 softtabstop=0 shiftwidth=2 expandtab
 
 let g:Powerline_symbols = 'fancy'
+
+autocmd BufEnter * lua require'completion'.on_attach()
+
+augroup MinimapShow
+    autocmd!
+    autocmd WinEnter * Minimap
+    autocmd WinLeave * MinimapClose
+augroup END
 
 augroup markdown_syntax
   au!
