@@ -128,7 +128,8 @@ nnoremap <space>ra :call VrcQuery()<CR>
 
 Plug 'Konfekt/Fastfold'
 
-nmap zuz <Plug>(FastFoldUpdate)
+nmap <space>z <Plug>(FastFoldUpdate)
+let g:fastfold_minlines = 50
 let g:fastfold_savehook = 1
 let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
 let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
@@ -189,7 +190,7 @@ nnoremap <leader>H <C-w>\<>
 
 " Plug 'ayu-theme/ayu-vim'
 " Plug 'phanviet/vim-monokai-pro'
-" Plug 'tomasr/molokai'
+Plug 'tomasr/molokai'
 " Plug 'altercation/vim-colors-solarized'
 " Plug 'therubymug/vim-pyte'
 " Plug 'joehannes-ux/vim-one'
@@ -206,11 +207,12 @@ Plug 'patstockwell/vim-monokai-tasty'
 let g:vim_monokai_tasty_italic = 1
 
 " Plug 'sainnhe/sonokai'
-"
+
 " let g:sonokai_enable_italic = 1
 " let g:sonokai_disable_italic_comment = 1
-"
+
 " Plug 'hzchirs/vim-material'
+Plug 'gruvbox-material/vim', {'as': 'gruvbox-material'}
 " Plug 'morhetz/gruvbox'
 Plug 'liuchengxu/space-vim-theme'
 
@@ -238,7 +240,7 @@ hi link illuminatedWord Visual
 Plug 'nightsense/night-and-day'
 
 let g:nd_themes = [
-  \ ['sunrise+0', 'edge', 'light' ],
+  \ ['sunrise+0', 'molokai', '' ],
   \ ['sunset+0', 'vim-monokai-tasty', '' ],
 \ ]
 
@@ -1220,7 +1222,6 @@ require'nvim-treesitter.configs'.setup {
 }
 require'lspconfig'.pyright.setup{}
 require'lspconfig'.pyls.setup{on_attach=require'completion'.on_attach}
-require'lspconfig'.tsserver.setup{on_attach=require'completion'.on_attach}
 require'fzf_lsp'.setup()
 EOF
 
@@ -1312,6 +1313,12 @@ set tabstop=2 softtabstop=0 shiftwidth=2 expandtab
 let g:Powerline_symbols = 'fancy'
 
 autocmd BufEnter * lua require'completion'.on_attach()
+
+" augroup Enter Buffer on Line where I left off
+autocmd BufReadPost *
+    \ if line("'\"") > 1 && line("'\"") <= line("$") |
+    \   execute "normal! g`\"" |
+    \ endif
 
 augroup MinimapShow
     autocmd!
