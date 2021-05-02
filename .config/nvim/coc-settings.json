@@ -6,14 +6,27 @@
   "tslint.configFile": "./tslint.json",
   "tslint.jsEnable": true,
   "git.enableGutters": true,
-  "fit.virtualTextPrefix": " >>> ",
+  "git.virtualTextPrefix": " >>> ",
   "git.addGBlameToVirtualText": true,
   "git.showCommitInFloating": true,
   "snippets.userSnippetsDirectory": "~/.local/snippets",
   "css.validate": false,
-  "less.validate": false,
+  "less.validate": true,
   "scss.validate": false,
   "wxss.validate": false,
   "stylelintplus.autoFixOnFormat": true,
-  "session.saveOnVimLeave": false
+  "session.saveOnVimLeave": false,
+  "languageserver": {
+    "clojure-lsp": {
+      "command": "bash",
+      "args": ["-c", "/usr/local/bin/clojure-lsp"],
+      "filetypes": ["clojure"],
+      "rootPatterns": ["project.clj"],
+      "additionalSchemes": ["jar", "zipfile"],
+      "trace.server": "verbose",
+      "initializationOptions": {
+        "ignore-classpath-directories": true
+      }
+    }
+  }
 }

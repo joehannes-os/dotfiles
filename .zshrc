@@ -6,28 +6,30 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 export TERM="xterm-256color"
+export TERM_PROGRAM="/Users/joehannes/.cargo/bin/alacritty"
+export TERM_PROGRAM_VERSION="0.7.2"
 
 # GO packages path
-export GOPATH=/home/joehannes/go
+export GOPATH=/Users/joehannes/go
 
 # default web browser for stuff like ddgr, googler
 export BROWSER=$(which google-chrome-stable)
 
 # JAVA_HOME
-export JAVA_HOME=/usr/lib/jvm/default-java
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/default/Contents/Home
 
 # Ruby gems path
-export GEMPATH=/home/joehannes/.gem/ruby/latest
+export GEMPATH=/Users/joehannes/.gem/ruby/latest
 
 # If you come from bash you might have to change your $PATH.
-export PATH=/home/linuxbrew/.linuxbrew/bin:$HOME/.local/bin:/usr/local/bin:$HOME/.cargo/bin:$JAVA_HOME/bin:$GEMPATH/bin:$GOPATH/bin:$PATH
+export PATH=/home/linuxbrew/.linuxbrew/bin:$HOME/.local/bin:/usr/local/bin:$HOME/.cargo/bin:$JAVA_HOME/bin:$GEMPATH/bin:$GOPATH/bin:/Users/joehannes/Library/Python/3.9/bin:$PATH
 export FPATH=/home/linuxbrew/.linuxbrew/share/zsh/site-functions:$FPATH
 if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
   export FPATH=/usr/local/share/zsh/site-functions:$FPATH
 fi
 
 # Path to your oh-my-zsh installation.
-export ZSH=/home/joehannes/.oh-my-zsh
+export ZSH=/Users/joehannes/.oh-my-zsh
 
 # Wakatime
 export ZSH_WAKATIME_PROJECT_DETECTION=true
@@ -94,7 +96,7 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern url)
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  git git-flow git-extras github git-hubflow ssh-agent compleat npm zsh-completions history history-substring-search tig copybuffer copydir copyfile dash fancy-ctrl-z sudo taskwarrior tmux tmuxinator zsh-navigation-tools zsh-autosuggestions zsh-peco-history zsh-select ubuntu vi-mode zsh-vimode-visual z zsh-wakatime zsh-syntax-highlighting gpg-agent fasd jump gnu-utils zsh-interactive-cd zsh_reload
+  git git-flow git-extras github git-hubflow ssh-agent compleat npm zsh-completions history history-substring-search tig copybuffer copydir copyfile dash fancy-ctrl-z sudo taskwarrior tmux tmuxinator zsh-navigation-tools zsh-autosuggestions zsh-peco-history ubuntu vi-mode z zsh-wakatime gpg-agent fasd jump gnu-utils zsh-interactive-cd zsh_reload
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -143,6 +145,10 @@ ufkk() {
   tmuxinator start "חישמה עושי";
 }
 
+ufkkq() {
+  tmuxinator stop "חישמה עושי";
+}
+
 ~() {
 	cd ~/.local/$1/
 }
@@ -153,7 +159,7 @@ zstyle :omz:plugins:ssh-agent agent-forwarding on
 zstyle :omz:plugins:ssh-agent identities id_rsa
 
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
-source /home/joehannes/.oh-my-git/prompt.sh
+source /Users/joehannes/.oh-my-git/prompt.sh
 
 # tmuxinator completion
 source ~/.local/bin/tmuxinator.zsh
@@ -168,9 +174,9 @@ export NVM_DIR="$HOME/.nvm"
 nvm use --silent default
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
+export PATH="$HOME/.rvm/bin:$PATH"
 source ~/.rvm/scripts/rvm
-rvm use 2.6.5
+rvm use 3.0.0 --default
 
 # $:404 => echo "... brief status code explanation"
 source ~/.local/bin/http_status_codes.zsh
@@ -188,6 +194,7 @@ if ! zplug check; then
 fi
 
 zplug "modules/prompt", from:prezto
+zplug "psprint/zsh-select"
 zplug "b4b4r07/enhancd"
 
 if zplug check b4b4r07/enhancd; then
@@ -205,8 +212,10 @@ if zplug check kutsan/zsh-system-clipboard; then
   typeset -g ZSH_SYSTEM_CLIPBOARD_TMUX_SUPPORT='true'
 fi
 
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
+zplug "b4b4r07/zsh-vimode-visual", defer:3
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
-[ -f /home/joehannes/.config/cani/completions/_cani.zsh ] && source /home/joehannes/.config/cani/completions/_cani.zsh
+[ -f /Users/joehannes/.config/cani/completions/_cani.zsh ] && source /Users/joehannes/.config/cani/completions/_cani.zsh

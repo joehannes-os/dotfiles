@@ -14,8 +14,6 @@ Plug 'anott03/nvim-lspinstall'
 Plug 'nvim-lua/completion-nvim'
 Plug 'gfanto/fzf-lsp.nvim'
 
-" nnoremap <silent> <space>ft :DocumentSymbols<cr>
-
 Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 
 let g:minimap_auto_start = 1
@@ -30,32 +28,26 @@ nnoremap <silent> <leader>Mn :Minimap<cr>
 nnoremap <silent> <leader>Mq :MinimapClose<cr>
 nnoremap <silent> <leader>Mr :MinimapRefresh<cr>
 
-" Plug 'camspiers/animate.vim' "having issues with coclist;
-" Plug 'camspiers/lens.vim'
-"
-" let g:lens#disabled_filetypes = ['CHADTree', 'fzf', 'minimap']
+Plug 'MattesGroeger/vim-bookmarks'
 
-" Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+highlight BookmarkSign ctermbg=NONE ctermfg=160
+highlight BookmarkLine ctermbg=194 ctermfg=NONE
+let g:bookmark_sign = '♥'
+let g:bookmark_highlight_lines = 1
+let g:bookmark_no_default_key_mappings = 1
 
-" Plug 'APZelos/blamer.nvim'
-"
-" let g:blamer_enabled = 1
-" let g:blamer_delay = 500
-" let g:blamer_prefix = ' >>> '
-" let g:blamer_template = '<committer> <summary>'
-" let g:blamer_date_format = '%d/%m/%y'
-" let g:blamer_relative_time = 1
-"
-" highlight Blamer guifg=lightgrey
-"
-" nnoremap <silent> <space>GB :BlamerHide<CR>:BlamerShow<CR>
+nmap <space>tm <Plug>BookmarkToggle
+nmap <space>tMa <Plug>BookmarkAnnotate
+nmap <space>fm :CocCommand fzf-preview.Bookmarks<cr>
+nmap ]m <Plug>BookmarkNext
+nmap [m <Plug>BookmarkPrev
+nmap <space>xm <Plug>BookmarkClearAll
+nmap <space>wm <Plug>BookmarkSave ~/.config/nvim/bookmarks
+nmap <space>lm <Plug>BookmarkLoad ~/.config/nvim/bookmarks
 
 Plug 'gko/vim-coloresque'
 
 Plug 'puremourning/vimspector'
-
-" let g:vimspector_enable_mappings = 'HUMAN' " default mappings that use the
-" ol' fancy F1-12 keys
 
 let g:vimspector_install_gadgets = [ 'debugger-for-chrome', 'vscode-node-debug2' ]
 
@@ -85,13 +77,11 @@ Plug 'voldikss/vim-skylight'
 let g:skylight_height = 0.9
 let g:skylight_position = 'right'
 
-nnoremap <silent> <space>jP :Skylight<CR>
+nnoremap <silent> <space>jP :Skylight!<CR>
 nnoremap <silent><expr> <a-j> skylight#float#has_scroll() ? skylight#float#scroll(1, 10) : "\<C-f>"
 nnoremap <silent><expr> <a-k> skylight#float#has_scroll() ? skylight#float#scroll(0, 10) : "\<C-b>"
 
 hi SkylightBorder guibg=magenta guifg=cyan
-
-Plug 'tyru/open-browser.vim'
 
 Plug 'smitajit/bufutils.vim'
 
@@ -99,13 +89,52 @@ let g:bufutils#open#use_fzf = 1
 
 nnoremap <space>wM :BResizeZoom<cr>
 
+Plug 'Olical/conjure', {'tag': 'v4.18.0'}
+
+" as of: https://practicalli.github.io/clojure/clojure-editors/editor-user-guides/neovim-conjure.html
+" , e b evaluates the current buffer
+" , e f evaluate the code in the file (from the file system)
+" , e e evaluate the current expression
+" , e r evaluate top level form (root)
+" , e ! evaluate current form and replace with result
+
+" Conjure support - jack-in with nrepl dependencies
+Plug 'tpope/vim-dispatch'
+Plug 'clojure-vim/vim-jack-in'
+" Only in Neovim:
+Plug 'radenling/vim-dispatch-neovim'
+
+Plug 'dense-analysis/ale'
+
+" Lint configuration - clj-kondo
+" clj-kondo should be installed on operating system path
+let g:ale_linters = {
+      \ 'clojure': ['clj-kondo']
+      \}
+
+" Structural editing for lisp languages
+Plug 'guns/vim-sexp'
+Plug 'tpope/vim-sexp-mappings-for-regular-people'
+Plug 'kien/rainbow_parentheses.vim'
+
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+Plug 'dmac/vim-cljfmt'
+
+" Coc Compatible AutoCompletion
+Plug 'clojure-vim/async-clj-omni'
+
 Plug 'metakirby5/codi.vim'
 
 Plug 'rhysd/reply.vim', { 'on': ['Repl', 'ReplAuto'] }
 
 let g:reply_repls = {
 \   'javascriptreact': ['node'],
-\   'typescriptreact': ['ts_node']
+\   'typescriptreact': ['ts_node'],
+\   'clojure': ['clj -A:cider-clj']
 \ }
 
 vnoremap <space>tr :'<,'>Repl<cr>
@@ -121,10 +150,9 @@ let g:vrc_curl_opts = {
   \ '--ipv4': '',
   \ '-k': '',
 \}
-" \ '-b': '/path/to/cookie', \ '-c': '/path/to/cookie',
 
-nnoremap <space>ta :edit ~/.local/snippets/vim.rest<CR>
-nnoremap <space>ra :call VrcQuery()<CR>
+nnoremap <space>t$ :edit ~/.local/snippets/vim.rest<CR>
+nnoremap <space>r$ :call VrcQuery()<CR>
 
 Plug 'Konfekt/Fastfold'
 
@@ -178,42 +206,11 @@ nnoremap <leader>K <C-w>-
 nnoremap <leader>L <C-w>>
 nnoremap <leader>H <C-w>\<>
 
-" Plug 'itchyny/calendar.vim'
-"
-" let g:calendar_google_calendar = 1
-" let g:calendar_google_task = 1
-"
-" source ~/.cache/calendar.vim/credentials.vim
-"
-" nnoremap <leader>C :Calendar -view=day -position=left -split=vertical -width=30<CR>
-"
-
-" Plug 'ayu-theme/ayu-vim'
-" Plug 'phanviet/vim-monokai-pro'
-Plug 'tomasr/molokai'
-" Plug 'altercation/vim-colors-solarized'
-" Plug 'therubymug/vim-pyte'
-" Plug 'joehannes-ux/vim-one'
-" Plug 'kaicataldo/material.vim'
-" Plug 'vim-scripts/summerfruit256.vim'
-Plug 'sainnhe/edge'
 Plug 'Th3Whit3Wolf/space-nvim'
-Plug 'NLKNguyen/papercolor-theme'
-
-set t_Co=256
-
 Plug 'patstockwell/vim-monokai-tasty'
 
 let g:vim_monokai_tasty_italic = 1
 
-" Plug 'sainnhe/sonokai'
-
-" let g:sonokai_enable_italic = 1
-" let g:sonokai_disable_italic_comment = 1
-
-" Plug 'hzchirs/vim-material'
-Plug 'gruvbox-material/vim', {'as': 'gruvbox-material'}
-" Plug 'morhetz/gruvbox'
 Plug 'liuchengxu/space-vim-theme'
 
 let g:one_allow_italics = 1 " I love italic for comments
@@ -221,13 +218,13 @@ let g:one_allow_italics = 1 " I love italic for comments
 if (has("nvim"))
   "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-  endif
   "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
   "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
   " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
-  " if (has("termguicolors"))
-  "   set termguicolors
-  " endif
+  if (has("termguicolors"))
+    set termguicolors
+  endif
+endif
 
 Plug 'RRethy/vim-illuminate', { 'do': 'take ~/.config/nvim/pack/plugins/start && hub clone RRethy/vim-illuminate' }
 " Possibly this repo needs installation/cloning manually
@@ -240,30 +237,26 @@ hi link illuminatedWord Visual
 Plug 'nightsense/night-and-day'
 
 let g:nd_themes = [
-  \ ['sunrise+0', 'molokai', '' ],
+  \ ['sunrise+0', 'space_vim_theme', 'dark' ],
   \ ['sunset+0', 'vim-monokai-tasty', '' ],
 \ ]
 
 " Europe/Austria/Vienna
-let g:nd_latitude = '50'
+" let g:nd_latitude = '50'
 
-if strftime("%m") > 3 && strftime("%m") < 11
-  let g:nd_timeshift = '38'
-else
-  let g:nd_timeshift = '-22'
-endif
+" Americas/Santo Domingo as of tropics closest to 19
+let g:nd_latitude = 20
+let g:nd_timeshift = 42
+" CEST-aware timeshift
+" if strftime("%m") > 3 && strftime("%m") < 11
+"   let g:nd_timeshift = '38'
+" else
+"   let g:nd_timeshift = '-22'
+" endif
 
 Plug 'git-time-metric/gtm-vim-plugin'
 
 let g:gtm_plugin_status_enabled = 1
-
-" don't need postcss for now
-" Plug 'stephenway/postcss.vim'
-" Plug 'hhsnopek/vim-sugarss'
-
-Plug 'fergdev/vim-cursor-hist'
-nnoremap <leader>j :call g:CursorHistForward()<CR>
-nnoremap <leader>k :call g:CursorHistBack()<CR>
 
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
@@ -311,20 +304,6 @@ let g:mkdp_echo_preview_url = 0
 " default is empty
 let g:mkdp_browserfunc = ''
 
-" options for markdown render
-" mkit: markdown-it options for render
-" katex: katex options for math
-" uml: markdown-it-plantuml options
-" maid: mermaid options
-" disable_sync_scroll: if disable sync scroll, default 0
-" sync_scroll_type: 'middle', 'top' or 'relative', default value is 'middle'
-"   middle: mean the cursor position alway show at the middle of the preview page
-"   top: mean the vim top viewport alway show at the top of the preview page
-"   relative: mean the cursor position alway show at the relative positon of the preview page
-" hide_yaml_meta: if hide yaml metadata, default is 1
-" sequence_diagrams: js-sequence-diagrams options
-" content_editable: if enable content editable for preview page, default: v:false
-" disable_filename: if disable filename header for preview page, default: 0
 let g:mkdp_preview_options = {
     \ 'mkit': {},
     \ 'katex': {},
@@ -358,9 +337,9 @@ let g:mkdp_page_title = '「${name}」'
 " these filetypes will have MarkdownPreview... commands
 let g:mkdp_filetypes = ['markdown']
 
-nmap <space>tM <Plug>MarkdownPreviewToggle
-nmap <space>M <Plug>MarkdownPreview
-nmap <space>qM <Plug>MarkdownPreviewStop
+nmap <space>t<> <Plug>MarkdownPreviewToggle
+nmap <space><> <Plug>MarkdownPreview
+nmap <space>q<> <Plug>MarkdownPreviewStop
 
 Plug 'frazrepo/vim-rainbow'
 
@@ -389,6 +368,7 @@ Plug 'honza/vim-snippets'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 let g:coc_global_extensions = [
+      \'coc-conjure',
       \'coc-snippets',
       \'coc-fzf-preview',
 			\'coc-yank',
@@ -431,7 +411,6 @@ let g:coc_global_extensions = [
 			\'coc-browser',
 			\'coc-angular',
 			\'coc-actions',
-      \'coc-floaterm',
       \'coc-react-refactor',
 			\]
 
@@ -475,11 +454,9 @@ nnoremap <silent> <space>l.  :<C-u>CocListResume<CR>
 nnoremap <silent> <space>ly  :<C-u>CocList yank<cr>
 nnoremap <silent> <space>lt  :<C-u>CocList todolist<cr>
 nnoremap <silent> <space>lf  :<C-u>CocList grep<cr>
-nnoremap <silent> <space>> :CocCommand session.save<cr>
-nnoremap <silent> <space>< :CocCommand session.load<CR>
-nnoremap <silent> <space>tm :CocCommand bookmark.toggle<CR>
-nnoremap <silent> <space>[m :CocCommand bookmark.prev<CR>
-nnoremap <silent> <space>]m :CocCommand bookmark.next<CR>
+nnoremap <silent> <space>lFw  :exe 'CocList -I --normal --input='.expand('<cword>').' words'<CR>
+nnoremap <silent> <space>S> :CocCommand session.save<cr>
+nnoremap <silent> <space>S< :CocCommand session.load<CR>
 
 " Snippets
 " --------
@@ -639,6 +616,8 @@ let g:vista_ctags_cmd = {
       \ 'css': 'tags',
 			\ 'scss': 'tags',
 			\ 'sass': 'tags',
+      \ 'clojure': 'tags',
+      \ 'clojurescript': 'tags',
 			\ }
 
 " To enable fzf's preview window set g:vista_fzf_preview.
@@ -656,13 +635,10 @@ let g:vista#renderer#icons = {
 
 " toggle structural view
 nnoremap <space>tO :Vista!!<cr>
-nnoremap <leader>Oo :Vista coc<cr>
+nnoremap <leader>tO :Vista coc<cr>
 
 " toggle fuzzy in buffer tag finder
 nnoremap <space>ft :Vista finder coc<CR>
-
-" autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
-" autocmd vimEnter * Vista
 
 Plug 'zefei/vim-wintabs'
 
@@ -672,6 +648,7 @@ command! Tabo WintabsOnlyVimtabs
 map [b <Plug>(wintabs_previous)
 map ]b <Plug>(wintabs_next)
 map <space>bc <Plug>(wintabs_close)
+map <space>bq :BCloseAll<cr>
 map <space>bu <Plug>(wintabs_undo)
 map <space>bo <Plug>(wintabs_only)
 map <space>wc <Plug>(wintabs_close_window)
@@ -733,10 +710,7 @@ highlight link WintabsInactiveNC TabLine
 
 " Highlight group for inactive buffer/tab in not-current windows.
 
-" Plug 'qpkorr/vim-bufkill'
 Plug 'wakatime/vim-wakatime'
-" Plug 'mhinz/vim-startify'
-
 Plug 'easymotion/vim-easymotion'
 
 let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
@@ -779,13 +753,6 @@ noremap <silent><expr> /  incsearch#go(<SID>incsearch_config())
 noremap <silent><expr> ?  incsearch#go(<SID>incsearch_config({'command': '?'}))
 noremap <silent><expr> g/ incsearch#go(<SID>incsearch_config({'is_stay': 1}))
 
-
-" Plug 'jlanzarotta/bufexplorer'
-"
-" nnoremap <space>tB  :BufExplorer<CR>
-
-Plug 'arithran/vim-delete-hidden-buffers'
-
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
@@ -821,8 +788,11 @@ endfunction
 
 let g:fzf_layout = { 'window': 'call OpenFloatingWin()' }
 
+command! -bang GitFilesInSubDirs call fzf#vim#files('-C ./', <bang>0)
+
 nnoremap <space>; :GFiles?<cr>
 nnoremap ; :GFiles --recurse-submodules<Cr>
+nnoremap <leader>; GitFilesInSubDirs<cr>
 nnoremap <space>fH :History<CR>
 nnoremap <space>fFf :Rg .<CR>
 
@@ -844,11 +814,12 @@ nnoremap <silent> <space>fK :AgIn ~/.manu-pages/md-detailled/<cr>
 nnoremap <silent> <space>fTb :CocCommand fzf-preview.BufferTags<cr>
 nnoremap <silent> <space>fl :CocCommand fzf-preview.Lines<cr>
 nnoremap <silent> <space>fLb :CocCommand fzf-preview.BufferLines<cr>
-nnoremap <silent> <space>fm :CocCommand fzf-preview.Marks<cr>
-nnoremap <silent> <space>fc :CocCommand fzf-preview.ProjectGrep @TODO<cr>
+" nnoremap <silent> <space>fm :CocCommand fzf-preview.Marks<cr>
+nnoremap <silent> <space>fg :CocCommand fzf-preview.ProjectGrep .<cr>
 nnoremap <silent> <space>fd :CocCommand fzf-preview.CocCurrentDiagnostics<cr>
 nnoremap <silent> <space>fGs :CocCommand fzf-preview.GitStatus<cr>
 nnoremap <silent> <space>fGa :CocCommand fzf-preview.GitActions<cr>
+nnoremap <silent> <space>fGh :CocCommand fzf-preview.GitLogs<cr>
 
 Plug 'fszymanski/fzf-gitignore', {'do': ':UpdateRemotePlugins'}
 
@@ -875,65 +846,6 @@ vnoremap <silent> <space>lFf  :Farf<cr>
 nnoremap <silent> <space>lFr  :Farr<cr>
 vnoremap <silent> <space>lFr  :Farr<cr>
 
-" Plug 'preservim/nerdcommenter'
-
-"filetype plugin on
-
-" Add spaces after comment delimiters by default
-"let g:NERDSpaceDelims = 1
-
-" Use compact syntax for prettified multi-line comments
-"let g:NERDCompactSexyComs = 1
-
-" Align line-wise comment delimiters flush left instead of following code indentation
-"let g:NERDDefaultAlign = 'left'
-
-" Add your own custom formats or override the defaults
-"let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }
-
-" Allow commenting and inverting empty lines (useful when commenting a region)
-"let g:NERDCommentEmptyLines = 1
-
-" Enable trimming of trailing whitespace when uncommenting
-"let g:NERDTrimTrailingWhitespace = 1
-
-" Enable NERDCommenterToggle to check all selected lines is commented or not
-"let g:NERDToggleCheckAllLines = 1
-
-" Plug 'cyansprite/Extract'
-
-" mappings for putting
-" nmap p <Plug>(extract-put)
-" nmap P <Plug>(extract-Put)
-"
-" nmap <leader>p :ExtractPin<cr>
-" nmap <leader>P :ExtractUnPin<cr>
-"
-" " mappings for cycling
-" map <m-s> <Plug>(extract-sycle)
-" ap <m-S> <Plug>(extract-Sycle)
-" map <c-s> <Plug>(extract-cycle)
-"
-" " mappings for visual
-" vmap p <Plug>(extract-put)
-" vmap P <Plug>(extract-Put)
-"
-" " mappings for insert
-" imap <m-v> <Plug>(extract-completeReg)
-" imap <c-v> <Plug>(extract-completeList)
-" imap <c-s> <Plug>(extract-cycle)
-" imap <m-s> <Plug>(extract-sycle)
-" imap <m-S> <Plug>(extract-Sycle)
-"
-" " mappings for replace
-" nmap <silent> s <Plug>(extract-replace-normal)
-" vmap <silent> s <Plug>(extract-replace-visual)
-"
-" Plug 'Lenovsky/nuake'
-
-" let g:nuake_position = 'top'
-" let g:nuake_per_tab = 1
-
 Plug 'voldikss/vim-floaterm'
 
 autocmd User Startified setlocal buflisted
@@ -949,31 +861,29 @@ let g:floaterm_winblend=10
 nnoremap <space>tt :FloatermToggle<CR>
 tnoremap <space>tt <C-\><C-n>:FloatermToggle<cr>
 inoremap <space>tt <C-\><C-n>:FloatermToggle<cr>
-nnoremap <space>Tn :CocCommand floaterm.new<cr>
-tnoremap <space>Tn <C-\><C-n>:CocCommand floaterm.new<cr>
-nnoremap ]t :CocCommand floaterm.next<cr>
-nnoremap [t :CocCommand floaterm.prev<cr>
-tnoremap ]t <c-\><c-n>:CocCommand floaterm.next<cr>
-tnoremap [t <c-\><c-n>:CocCommand floaterm.prev<cr>
-nnoremap <space>lt :CocList floaterm<cr>
+nnoremap <space>Tn :FloatermNew<cr>
+tnoremap <space>Tn <C-\><C-n>:FloatermNew<cr>
+nnoremap ]t :FloatermNext<cr>
+nnoremap [t :FloatermPrev<cr>
+tnoremap ]t <c-\><c-n>:FloatermNext<cr>
+tnoremap [t <c-\><c-n>:FloatermPrev<cr>
 
-" Plug 'fmoralesc/nlanguagetool.nvim'
-" Plug 'sheerun/vim-polyglot'
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 Plug 'roxma/vim-tmux-clipboard'
 Plug 'christoomey/vim-tmux-navigator'
-"Plug 'mhartington/nvim-typescript', { 'do': './install.sh' }
-" Plug 'autozimu/LanguageClient-neovim'
-"Plug 'jalvesaq/vimcmdline'
-" Plug 'airblade/vim-gitgutter'
-" Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
+Plug 'airblade/vim-rooter'
 Plug 'm00qek/nvim-contabs'
 
-" contabs#integrations#tabline#theme = 'project/path'
+let g:contabs#integrations#tabline#theme = 'project/path'
 let g:contabs#project#locations = [
       \  { 'path': '~/.local/git/', 'depth': 2, 'git_only': v:true },
+      \  { 'path': '~/.local/git/united-signals/nocode-concept/frontend/kotlin-intellijidea', 'depth': 0, 'git_only': v:false},
+      \  { 'path': '~/.local/git/united-signals/nocode-concept/frontend/pdfjs-express', 'depth': 0, 'git_only': v:false},
+      \  { 'path': '~/.local/git/united-signals/nocode-concept/frontend/pdfjs-express-cljs', 'depth': 0, 'git_only': v:false},
+      \  { 'path': '~/.local/git/united-signals/nocode-concept/frontend/cljs-luminus', 'depth': 0, 'git_only': v:false},
+      \  { 'path': '~/.local/git/united-signals/nocode-concept/many_thoughts_and_snippets/concept-reagent/', 'depth': 0, 'git_only': v:false},
       \  { 'path': '~/.local/git/playground', 'depth': 0, 'git_only': v:false, 'formatter': { _ -> 'playground' } },
       \  { 'path': '~/.local/snippets', 'depth': 0, 'git_only': v:false, 'formatter': { _ -> 'snippets' } },
       \]
@@ -982,153 +892,62 @@ nnoremap <silent> <space>fp :call contabs#project#select()<CR>
 nnoremap <silent> <space>fb :call contabs#buffer#select()<CR>
 
 Plug 'tomtom/tcomment_vim'
-" Plug 'rking/ag.vim'
 Plug 'tpope/vim-fugitive'
 
 nnoremap <silent> <space>Gd :<C-u>Git difftool<CR>
 nnoremap <silent> <space>Gm :<C-u>Git mergtool<CR>
 nnoremap <silent> <space>GP :<C-u>Git pull<CR>
 
-" Plug 'Chun-Yang/vim-action-ag'
 Plug 'editorconfig/editorconfig-vim'
-
-" Plug 'rbong/vim-crystalline'
-"
-" function! StatusLine(current, width)
-"   let l:s = ''
-"
-"   if a:current
-"     let l:s .= crystalline#mode() . crystalline#right_mode_sep('')
-"   else
-"     let l:s .= '%#CrystallineInactive#'
-"   endif
-"   let l:s .= ' %f%h%w%m%r '
-"   if a:current
-"     let l:s .= crystalline#right_sep('', 'Fill') . ' %{fugitive#head()}'
-"   endif
-"
-"   let l:s .= '%='
-"   if a:current
-"     let l:s .= crystalline#left_sep('', 'Fill') . ' %{&paste ?"PASTE ":""}%{&spell?"SPELL ":""}'
-"     let l:s .= crystalline#left_mode_sep('')
-"   endif
-"   if a:width > 80
-"     let l:s .= ' %{&ft}[%{&fenc!=#""?&fenc:&enc}][%{&ff}] %l/%L %c%V %P '
-"   else
-"     let l:s .= ' '
-"   endif
-"
-"   return l:s
-" endfunction
-"
-" function! TabLine()
-"   return crystalline#bufferline(2, 0, 1) . '%=%#CrystallineTab# '
-" endfunction
-"
-" let g:crystalline_enable_sep = 1
-" let g:crystalline_statusline_fn = 'StatusLine'
-" let g:crystalline_tabline_fn = 'TabLine'
-" let g:crystalline_theme = 'molokai'
-"
-" set statusline=
-" set tabline=%!TabLine()
-" set guioptions-=e
-
-" autocmd BufEnter,WinEnter * setlocal statusline=%!StatusLine()
-" autocmd BufLeave,WinLeave * setlocal statusline=
-
-Plug 'itchyny/lightline.vim'
-
-autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
-
-function! LightlineGitBlame() abort
-  let blame = get(b:, 'coc_git_blame', '')
-  return blame
-endfunction
-
-function! LightlineFileformat()
-  return &fileformat
-endfunction
-
-function! LightlineFiletype()
-  return  (&filetype !=# '' ? &filetype : '.???')
-endfunction
-
-function! LightlineFilename()
-  let filename = expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
-  let modified = &modified ? ' +' : ''
-  return filename . modified
-endfunction
-
-function! CocCurrentFunction()
-    return get(b:, 'coc_current_function', '')
-endfunction
-
-function! StatusDiagnostic() abort
-  let info = get(b:, 'coc_diagnostic_info', {})
-  if empty(info) | return '' | endif
-  let msgs = []
-  if get(info, 'error', 0)
-    call add(msgs, 'E' . info['error'])
-  endif
-  if get(info, 'warning', 0)
-    call add(msgs, 'W' . info['warning'])
-  endif
-  return join(msgs, ' '). ' ' . get(g:, 'coc_status', '')
-endfunction
-
-let g:lightline = {
-  \ 'colorscheme': 'seoul256',
-  \ 'active': {
-  \   'left': [
-  \     [ 'mode', 'paste'],
-  \     [ 'filename', 'method' ],
-  \     [ 'gitbranch', 'blame', 'diagnostic' ]
-  \   ],
-  \   'right':[
-  \     [ 'filetype', 'fileencoding', 'lineinfo', 'percent'],
-  \   ],
-  \ },
-  \ 'component_function': {
-  \   'diagnostic': 'StatusDiagnostic',
-  \   'filename': 'LightlineFilename',
-  \   'filetype': 'LightlineFiletype',
-  \   'gitbranch': 'FugitiveHead',
-  \   'blame': 'LightlineGitBlame',
-	\		'cocstatus': 'coc#status',
-  \   'method': 'CocCurrentFunction',
-	\ }
-\ }
-
-let g:lightline.separator = {
-\   'left': '', 'right': ''
-\}
-
-let g:lightline.subseparator = {
-\   'left': '', 'right': ''
-\}
-
-let g:lightline.tabline = {
-\   'left': [ ['tabs'] ],
-\   'right': [ ['close'] ]
-\ }
-
-"Plug 'maximbaz/lightline-ale'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sleuth'
-" replaced vim-surround with vim-sandwich
-" Plug 'tpope/vim-surround'
 Plug 'machakann/vim-sandwich'
 Plug 'mattn/emmet-vim'
 
 let g:user_emmet_leader_key="<c-z>"
 
-"Plug 'w0rp/ale'
-"Plug 'vshortenim-airline/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline'
+
+let g:airline#extensions#tabline#enabled = 1
+
+let g:airline#extensions#tabline#left_sep = ''
+let g:airline#extensions#tabline#left_alt_sep = ''
+
+let g:airline_powerline_fonts = 1
+
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+
+" unicode symbols
+let g:airline_left_sep = '»'
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '«'
+let g:airline_right_sep = '◀'
+let g:airline_symbols.linenr = '␊'
+let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.whitespace = 'Ξ'
+
+" airline symbols
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
+
+Plug 'vim-airline/vim-airline-themes'
+
+let g:airline_theme='kalisi'
 
 Plug 'ludovicchabant/vim-gutentags'
 
@@ -1142,30 +961,6 @@ let g:gutentags_modules = ['ctags']
 
 let g:gutentags_cache_dir = expand('~/.local/tags')
 let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
-
-" Plug 'majutsushi/tagbar'
-"
-" let g:tagbar_type_typescript = {
-"   \ 'ctagstype': 'typescriptreact',
-"   \ 'kinds': [
-"     \ 'c:classes',
-"     \ 'n:modules',
-"     \ 'f:functions',
-"     \ 'v:variables',
-"     \ 'v:varlambdas',
-"     \ 'm:members',
-"     \ 'i:interfaces',
-"     \ 'e:enums',
-"   \ ]
-" \ }
-"
-" nnoremap <space>tT :TagbarToggle<CR>
-
-" Plug 'severin-lemaignan/vim-minimap'
-
-" autocmd vimenter * Minimap
-
-" Plug 'ashisha/image.vim'
 
 Plug 'lokaltog/neoranger'
 
@@ -1182,32 +977,9 @@ let g:neoranger_viewmode='miller'
 " this line makes ranger show hidden files by default
 let g:neoranger_opts='--cmd="set show_hidden true"'
 
-" Plug 'francoiscabrol/ranger.vim'
-"
-" let g:ranger_replace_netrw = 1 "// open ranger when vim open a directory
-"
-" map <space>tf :Ranger<cr>
-
-Plug 'rbgrouleff/bclose.vim'
 Plug 'tmux-plugins/vim-tmux-focus-events'
-
-" Plug 'tpope/vim-obsession'
-"
-" map <leader>Ss :Obsess<cr>
-" map <leader>So :Obsess!<cr>
-"
-" Plug 'davidhalter/jedi-vim'
-""Plug 'felipec/notmuch-vim'
-" Plug 'mkitt/tabline.vim'
-" Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'ryanoasis/vim-devicons'
-" Plug 'brettanomyces/nvim-editcommand'
-
-" let g:editcommand_prompt = ''
-" let g:editcommand_no_mappings = 1
-" tmap <c-x> :FloatermToggle<cr><Plug>EditCommand
-" nnoremap <space>qSB :%FloatermSend<cr>:close<cr>:FloatermToggle<cr>
 
 call plug#end()
 
@@ -1224,7 +996,6 @@ require'lspconfig'.pyright.setup{}
 require'lspconfig'.pyls.setup{on_attach=require'completion'.on_attach}
 require'fzf_lsp'.setup()
 EOF
-
 
 " useful functions
 " ----------------
@@ -1277,29 +1048,25 @@ else
   hi CursorLine cterm=NONE ctermbg=black ctermfg=white guibg=#E1B3D8
 endif
 
-set foldmethod=syntax
 set rtp+=/home/joehannes/.config/nvim/gitted/tabnine-vim
 set ruler
 set number relativenumber
-set termguicolors
-set guifont=Fira\ Mono
-" too many statusline items
-" set statusline=
-" set statusline+=%{get(g:,'coc_git_status','')}.
-" set statusline+=%{get(g:,'coc_git_blame','')}.
-" set statusline+=%{StatusDiagnostic()}%{exists('*GTMStatusline')?'['.GTMStatusline().']':''}\ %<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P.
-" set statusline+=%{NearestMethodOrFunction()}
-
+set guifont=FiraMono\ Nerd\ Font
 set tabline=%!contabs#integrations#tabline#create()
 
 set showtabline=2
 set laststatus=2
 
+" disable auto equalalways ... window dimenstions resizing auto off
+set noea
+
 set directory=/tmp
 set nobackup
 set nowritebackup
 set noswapfile
+set nocompatible
 set hidden
+set encoding=utf-8
 set cmdheight=1
 " You will have bad experience for diagnostic messages when it's default 4000.
 set updatetime=200
@@ -1319,12 +1086,6 @@ autocmd BufReadPost *
     \ if line("'\"") > 1 && line("'\"") <= line("$") |
     \   execute "normal! g`\"" |
     \ endif
-
-augroup MinimapShow
-    autocmd!
-    autocmd WinEnter * Minimap
-    autocmd WinLeave * MinimapClose
-augroup END
 
 augroup markdown_syntax
   au!
@@ -1348,14 +1109,26 @@ augroup filetypedetect
   au! BufNewFile,BufFilePre,BufRead,BufReadPost *.sss.md set filetype=sugarss
 augroup END
 
+augroup foldMethodSetLocal
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave *.js setlocal foldmethod=syntax
+  autocmd BufEnter,FocusGained,InsertLeave *.ts setlocal foldmethod=syntax
+  autocmd BufEnter,FocusGained,InsertLeave *.jsx setlocal foldmethod=syntax
+  autocmd BufEnter,FocusGained,InsertLeave *.tsx setlocal foldmethod=syntax
+  autocmd BufEnter,FocusGained,InsertLeave *.json setlocal foldmethod=indent
+augroup END
+
 noremap <space><esc> :<C-u>set relativenumber!<CR>
+
+nnoremap <silent> [g <C-o>
+nnoremap <silent> ]g <C-i>
 
 nnoremap <silent> <space>H :call WinMove('h')<CR>
 nnoremap <silent> <space>J :call WinMove('j')<CR>
 nnoremap <silent> <space>K :call WinMove('k')<CR>
 nnoremap <silent> <space>L :call WinMove('l')<CR>
-nnoremap <silent> [p :call WinMove('h')<CR>
-nnoremap <silent> ]p :call WinMove('l')<CR>
 
 nnoremap <leader><leader>, :edit ~/.local/git/joehannes-os/dotfiles/.config/nvim/init.vim<cr>
 nnoremap <leader><leader>. :edit ~/.local/git/joehannes-os/dotfiles/.config/nvim/coc-settings.json<cr>
+
+" lua require'init'

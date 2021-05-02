@@ -41,7 +41,6 @@ startup_window: cli
 
 windows:
   - ps: bpytop
-  - mail: neomutt
   - cli: votd
   - editor: nvim
   - tasks:
