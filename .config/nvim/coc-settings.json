@@ -10,23 +10,48 @@
   "git.addGBlameToVirtualText": true,
   "git.showCommitInFloating": true,
   "snippets.userSnippetsDirectory": "~/.local/snippets",
+  "cSpell.allowCompoundWords": true,
   "css.validate": false,
   "less.validate": true,
   "scss.validate": false,
   "wxss.validate": false,
   "stylelintplus.autoFixOnFormat": true,
-  "session.saveOnVimLeave": false,
+  "session.saveOnVimLeave": true,
   "languageserver": {
     "clojure-lsp": {
       "command": "bash",
-      "args": ["-c", "/usr/local/bin/clojure-lsp"],
+      "args": ["-c", "clojure-lsp"],
       "filetypes": ["clojure"],
       "rootPatterns": ["project.clj"],
       "additionalSchemes": ["jar", "zipfile"],
       "trace.server": "verbose",
       "initializationOptions": {
-        "ignore-classpath-directories": true
+      },
+      "dockerfile": {
+        "command": "docker-langserver",
+        "filetypes": ["dockerfile"],
+        "args": ["--stdio"]
+      },
+      "kotlin": {
+        "command": "~/.lsp/kotlin/server/bin/kotlin-language-server",
+        "filetypes": ["kotlin"]
+      },
+      "sql": {
+        "command": "sql-language-server",
+        "args" : ["up", "--method", "stdio"],
+        "filetypes": ["sql", "mysql", "psql"]
       }
     }
-  }
+  },
+  "cSpell.userWords": [
+    "ITCSS",
+    "Neugschwentner",
+    "bemit",
+    "bulma",
+    "joehannes",
+    "joevatar",
+    "lein",
+    "prudencss",
+    "webm"
+  ]
 }

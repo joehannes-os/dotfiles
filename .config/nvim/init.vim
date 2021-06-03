@@ -1,4 +1,5 @@
 let mapleader = ","
+let maplocalleader = "<space>"
 
 " Autoinstall vim-plug
 if empty(glob('~/.nvim/autoload/plug.vim'))
@@ -9,24 +10,64 @@ endif
 
 call plug#begin()
 
-Plug 'neovim/nvim-lspconfig'
-Plug 'anott03/nvim-lspinstall'
-Plug 'nvim-lua/completion-nvim'
-Plug 'gfanto/fzf-lsp.nvim'
+Plug 'eraserhd/parinfer-rust', {'do': 'cargo build --release'}
 
-Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
+Plug 'jxnblk/vim-mdx-js'
 
-let g:minimap_auto_start = 1
-let g:minimap_auto_start_win_enter = 1
-let g:minimap_width = 20
-let g:minimap_highlight = 'MinimapCurrentLine'
-let g:minimap_left = 0
+" included as coc-plugin
+"Plug 'codota/tabnine-vim'
 
-hi MinimapCurrentLine ctermfg=green guifg=#50FA7B guibg=#32302f
+Plug 'dbeniamine/cheat.sh-vim'
 
-nnoremap <silent> <leader>Mn :Minimap<cr>
-nnoremap <silent> <leader>Mq :MinimapClose<cr>
-nnoremap <silent> <leader>Mr :MinimapRefresh<cr>
+nnoremap <silent> <space>Cr :CheatReplace<cr>
+
+" For now stick with coc
+" Plug 'neovim/nvim-lspconfig'
+" Plug 'nvim-lua/completion-nvim'
+" Plug 'gfanto/fzf-lsp.nvim'
+" Plug 'onsails/lspkind-nvim'
+" Plug 'kosayoda/nvim-lightbulb'
+"
+" autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()
+"
+" Plug 'ray-x/lsp_signature.nvim'
+
+" Plug 'ray-x/guihua.lua', {'do': 'cd lua/fzy && make' }
+" Plug 'ray-x/navigator.lua'
+" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+" Plug 'ojroques/nvim-lspfuzzy'
+"
+" nnoremap <silent> <space>fDb :LspDiagnostics 0<cr>
+
+" Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
+"
+" let g:minimap_auto_start = 1
+" let g:minimap_auto_start_win_enter = 1
+" let g:minimap_width = 20
+" let g:minimap_highlight = 'MinimapCurrentLine'
+" let g:minimap_left = 0
+"
+" hi MinimapCurrentLine ctermfg=green guifg=#50FA7B guibg=#32302f
+"
+" nnoremap <silent> <leader>Mn :Minimap<cr>
+" nnoremap <silent> <leader>Mq :MinimapClose<cr>
+" nnoremap <silent> <leader>Mr :MinimapRefresh<cr>
+
+" devdocs a la mac but terminal + vim
+Plug 'sunaku/vim-dasht'
+" search related docsets
+nnoremap <leader>k :Dasht<Space>
+" search ALL the docsets
+nnoremap <leader><leader>k :Dasht!<Space>
+" search related docsets
+nnoremap <silent><space>k :call Dasht(dasht#cursor_search_terms())<cr>
+" search ALL the docsets
+nnoremap <silent><space><space>k :call Dasht(dasht#cursor_search_terms(), '!')<cr>
+
+let g:dasht_filetype_docsets = {}
+let g:dasht_filetype_docsets['clojure'] = ['javascript', 'html', 'semantic ui', 'lodash', 'svg']
+" create new tab beside current one
+let g:dasht_results_window = 'tabnew'
 
 Plug 'MattesGroeger/vim-bookmarks'
 
@@ -44,6 +85,15 @@ nmap [m <Plug>BookmarkPrev
 nmap <space>xm <Plug>BookmarkClearAll
 nmap <space>wm <Plug>BookmarkSave ~/.config/nvim/bookmarks
 nmap <space>lm <Plug>BookmarkLoad ~/.config/nvim/bookmarks
+
+
+if v:vim_did_enter
+  exec "normal \<Plug>BookmarkLoad ~/.config/nvim/bookmarks"
+else
+ au VimEnter * exec "normal \<Plug>BookmarkLoad ~/.config/nvim/bookmarks"
+endif
+
+au VimLeavePre * exec "normal \<Plug>BookmarkSave ~/.config/nvim/bookmarks"
 
 Plug 'gko/vim-coloresque'
 
@@ -63,9 +113,9 @@ nmap <space>dj <Plug>VimspectorStepInto<CR>
 nmap <space>dk <Plug>VimspectorStepOut<CR>
 nmap <space>d<CR> <Plug>VimSpectorRunToCursor<CR>
 
-Plug 'wellle/context.vim'
-
-nnoremap <silent> <space>tC :ContextToggle<CR>
+" Plug 'wellle/context.vim'
+"
+" nnoremap <silent> <space>tC :ContextToggle<CR>
 
 Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
 
@@ -77,7 +127,7 @@ Plug 'voldikss/vim-skylight'
 let g:skylight_height = 0.9
 let g:skylight_position = 'right'
 
-nnoremap <silent> <space>jP :Skylight!<CR>
+nnoremap <silent> <space>jp :Skylight!<CR>
 nnoremap <silent><expr> <a-j> skylight#float#has_scroll() ? skylight#float#scroll(1, 10) : "\<C-f>"
 nnoremap <silent><expr> <a-k> skylight#float#has_scroll() ? skylight#float#scroll(0, 10) : "\<C-b>"
 
@@ -89,20 +139,29 @@ let g:bufutils#open#use_fzf = 1
 
 nnoremap <space>wM :BResizeZoom<cr>
 
-Plug 'Olical/conjure', {'tag': 'v4.18.0'}
+Plug 'arithran/vim-delete-hidden-buffers'
 
-" as of: https://practicalli.github.io/clojure/clojure-editors/editor-user-guides/neovim-conjure.html
-" , e b evaluates the current buffer
-" , e f evaluate the code in the file (from the file system)
-" , e e evaluate the current expression
-" , e r evaluate top level form (root)
-" , e ! evaluate current form and replace with result
+nnoremap <space>xb :DeleteHiddenBuffers<cr>
 
-" Conjure support - jack-in with nrepl dependencies
-Plug 'tpope/vim-dispatch'
-Plug 'clojure-vim/vim-jack-in'
-" Only in Neovim:
-Plug 'radenling/vim-dispatch-neovim'
+au VimLeavePre * exec "normal \:DeleteHiddenBuffers"
+
+Plug 'Olical/conjure', {'tag': 'v4.19.0'}
+
+nnoremap <space>ee :ConjureEval<cr>
+nnoremap <space>eb :ConjureEvalBuf<cr>
+nnoremap <space>ec :ConjureCljConnectPortFile<cr>
+nnoremap <space>e= :ConjureShadowSelect app<cr>
+
+let g:conjure#log#hud#height=0.9
+
+" " Conjure support - jack-in with nrepl dependencies
+" Plug 'tpope/vim-dispatch'
+" Plug 'clojure-vim/vim-jack-in'
+"
+" nnoremap <space>tRl :Lein<cr>
+"
+" " Only in Neovim:
+" Plug 'radenling/vim-dispatch-neovim'
 
 Plug 'dense-analysis/ale'
 
@@ -122,19 +181,17 @@ au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 
-Plug 'dmac/vim-cljfmt'
+Plug 'dmac/vim-cljfmt', { 'do': 'go get github.com/cespare/goclj/cljfmt' }
 
 " Coc Compatible AutoCompletion
 Plug 'clojure-vim/async-clj-omni'
-
-Plug 'metakirby5/codi.vim'
 
 Plug 'rhysd/reply.vim', { 'on': ['Repl', 'ReplAuto'] }
 
 let g:reply_repls = {
 \   'javascriptreact': ['node'],
 \   'typescriptreact': ['ts_node'],
-\   'clojure': ['clj -A:cider-clj']
+\   'clojure': ['clojure']
 \ }
 
 vnoremap <space>tr :'<,'>Repl<cr>
@@ -206,7 +263,8 @@ nnoremap <leader>K <C-w>-
 nnoremap <leader>L <C-w>>
 nnoremap <leader>H <C-w>\<>
 
-Plug 'Th3Whit3Wolf/space-nvim'
+let g:goyo_width='80%'
+
 Plug 'patstockwell/vim-monokai-tasty'
 
 let g:vim_monokai_tasty_italic = 1
@@ -222,11 +280,13 @@ if (has("nvim"))
   "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
   " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
   if (has("termguicolors"))
+    let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
     set termguicolors
   endif
 endif
 
-Plug 'RRethy/vim-illuminate', { 'do': 'take ~/.config/nvim/pack/plugins/start && hub clone RRethy/vim-illuminate' }
+Plug 'RRethy/vim-illuminate', { 'do': 'take ~/.config/nvim/pack/plugins/start && gh repo clone RRethy/vim-illuminate' }
 " Possibly this repo needs installation/cloning manually
 " Time in milliseconds (default 250)
 let g:Illuminate_delay = 100
@@ -365,7 +425,7 @@ let g:UltiSnipsSnippetDirectories=[$HOME."/.local/snippets"]
 
 Plug 'honza/vim-snippets'
 
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': 'npm i -g dockerfile-language-server-nodejs sql-language-server'}
 
 let g:coc_global_extensions = [
       \'coc-conjure',
@@ -378,7 +438,6 @@ let g:coc_global_extensions = [
 			\'coc-tsserver',
 			\'coc-tslint-plugin',
 			\'coc-translator',
-			\'coc-todolist',
 			\'coc-tag',
 			\'coc-tabnine',
 			\'coc-syntax',
@@ -392,7 +451,6 @@ let g:coc_global_extensions = [
 			\'coc-markdownlint',
 			\'coc-lists',
 			\'coc-json',
-			\'coc-jira-complete',
 			\'coc-html',
       \'coc-svg',
 			\'coc-highlight',
@@ -409,7 +467,6 @@ let g:coc_global_extensions = [
 			\'coc-css',
 			\'coc-css-block-comments',
 			\'coc-browser',
-			\'coc-angular',
 			\'coc-actions',
       \'coc-react-refactor',
 			\]
@@ -437,7 +494,8 @@ command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 " Using CocList
 " Show all diagnostics
-nnoremap <silent> <space>ld  :<C-u>CocList diagnostics<cr>
+" nnoremap <silent> <space>ld  :<C-u>CocList diagnostics<cr>
+" redefined later with usage of bqr & coc
 " //@TODO: add filter to not show cspell diagnostic ... more shortcuts
 " Show commands
 nnoremap <silent> <space>lx  :<C-u>CocList commands<cr>
@@ -452,12 +510,11 @@ nnoremap <silent> <space>ak  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>l.  :<C-u>CocListResume<CR>
 nnoremap <silent> <space>ly  :<C-u>CocList yank<cr>
-nnoremap <silent> <space>lt  :<C-u>CocList todolist<cr>
 nnoremap <silent> <space>lf  :<C-u>CocList grep<cr>
 nnoremap <silent> <space>lFw  :exe 'CocList -I --normal --input='.expand('<cword>').' words'<CR>
 nnoremap <silent> <space>S> :CocCommand session.save<cr>
 nnoremap <silent> <space>S< :CocCommand session.load<CR>
-
+"
 " Snippets
 " --------
 " Use <C-l> for trigger snippet expand.
@@ -486,13 +543,13 @@ xmap <silent> <leader><S-TAB> <Plug>(coc-range-select-backword)
 " -----------
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
 
-xmap <space>as  <Plug>(coc-codeaction-selected)
-nmap <space>as  <Plug>(coc-codeaction-selected)
+xmap <space>As  <Plug>(coc-codeaction-selected)
+nmap <space>As  <Plug>(coc-codeaction-selected)
 
 " Remap for do codeAction of current line
-nmap <space>aa  <Plug>(coc-codeaction)
+nmap <space>Aa  <Plug>(coc-codeaction)
 " Fix autofix problem of current line
-nmap <space>af  <Plug>(coc-fix-current)
+nmap <space>Af  <Plug>(coc-fix-current)
 
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
@@ -506,15 +563,17 @@ nmap <space>Rr <Plug>(coc-rename)
 augroup cocAutoFormat
   autocmd!
   " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,typescriptreact,javascript,javascriptreact,json setl formatexpr=CocAction('formatSelected')
+  autocmd FileType typescript,typescriptreact,javascript,javascriptreact,json,clojure setl formatexpr=CocAction('formatSelected')
   " Update signature help on jump placeholder
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-nnoremap <space>Rp  :Prettier<cr>
-au FileType svg nnoremap <space>Rp :CocCommand svg.prettySvg<cr>
+nnoremap <space>Rf  :Prettier<cr>
+au FileType svg nnoremap <space>Rf :CocCommand svg.prettySvg<cr>
+au FileType clojure nnoremap <space>Rf :CljFmt<cr>
 
-nnoremap <leader>.  :Fold<cr>
+nnoremap <leader>.>  :Fold<cr>
+nnoremap <leader>.<  :Unfold<cr>
 xmap <space>Rs  <Plug>(coc-format-selected)
 nmap <space>Rs  <Plug>(coc-format-selected)
 
@@ -546,8 +605,8 @@ endfunction
 " git specific stuff
 " ------------------
 " navigate chunks of current buffer
-nmap [g <Plug>(coc-git-prevchunk)
-nmap ]g <Plug>(coc-git-nextchunk)
+nmap [G <Plug>(coc-git-prevchunk)
+nmap ]G <Plug>(coc-git-nextchunk)
 " navigate conflicts of current buffer
 nmap [c <Plug>(coc-git-prevconflict)
 nmap ]c <Plug>(coc-git-nextconflict)
@@ -564,6 +623,7 @@ nnoremap <silent> <space>Gp :<C-u>CocCommand git.push<CR>
 nnoremap <silent> <space>lGs  :<C-u>CocList --normal gstatus<CR>
 nnoremap <silent> <space>zc :CocCommand git.foldUnchanged<CR>
 nnoremap <silent> <space>y@ :CocCommand git.copyUrl<CR>
+nnoremap <silent> <space>tGg :CocCommand git.toggleGutters<CR>
 
 " completion specific stuff
 " -------------------------
@@ -574,11 +634,11 @@ function! s:check_back_space() abort
 endfunction
 
 " Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-tab> coc#refresh()
+inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
+inoremap <silent><expr> <c-TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
@@ -587,6 +647,49 @@ inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
 " Coc only does snippet and additional edit on confirm.
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" bqf-related stuff
+" :h CocLocationsChange for detail
+let g:coc_enable_locationlist = 0
+aug Coc
+    au!
+    au User CocLocationsChange ++nested call Coc_qf_jump2loc(g:coc_jump_locations)
+aug END
+
+" if you use coc-fzf, you should disable its CocLocationsChange event make
+" bqf work for <Plug>(coc-references)
+" au VimEnter * au! CocFzfLocation User CocLocationsChange
+nnoremap <silent> <space>ld <Cmd>call Coc_qf_diagnostic()<CR>
+
+function! Coc_qf_diagnostic() abort
+    let diagnostic_list = CocAction('diagnosticList')
+    let items = []
+    let loc_ranges = []
+    for d in diagnostic_list
+        let text = printf('[%s%s] %s', (empty(d.source) ? 'coc.nvim' : d.source),
+                    \ (d.code ? ' ' . d.code : ''), split(d.message, '\n')[0])
+        let item = {'filename': d.file, 'lnum': d.lnum, 'col': d.col, 'text': text, 'type':
+                    \ d.severity[0]}
+        call add(loc_ranges, d.location.range)
+        call add(items, item)
+    endfor
+    call setqflist([], ' ', {'title': 'CocDiagnosticList', 'items': items,
+                \ 'context': {'bqf': {'lsp_ranges_hl': loc_ranges}}})
+    botright copen
+endfunction
+
+function! Coc_qf_jump2loc(locs) abort
+    let loc_ranges = map(deepcopy(a:locs), 'v:val.range')
+    call setloclist(0, [], ' ', {'title': 'CocLocationList', 'items': a:locs,
+                \ 'context': {'bqf': {'lsp_ranges_hl': loc_ranges}}})
+    let winid = getloclist(0, {'winid': 0}).winid
+    if winid == 0
+        aboveleft lwindow
+    else
+        call win_gotoid(winid)
+    endif
+endfunction
+" end bqf-related stuff
 
 Plug 'liuchengxu/vista.vim'
 
@@ -607,17 +710,17 @@ let g:vista_default_executive = 'ctags'
 " for some certain filetypes.The file path will be appened to your custom command.
 " For example:
 let g:vista_ctags_cmd = {
-			\ 'javascript': 'tags',
-			\ 'javascriptreact': 'tags',
-			\ 'javascript.jsx': 'tags',
-			\ 'typescript': 'tags',
-			\ 'typescriptreact': 'tags',
-			\ 'typescript.tsx': 'tags',
-      \ 'css': 'tags',
-			\ 'scss': 'tags',
-			\ 'sass': 'tags',
-      \ 'clojure': 'tags',
-      \ 'clojurescript': 'tags',
+			\ 'javascript': 'ctags -R',
+			\ 'javascriptreact': 'ctags -R',
+			\ 'javascript.jsx': 'ctags -R',
+			\ 'typescript': 'ctags -R',
+			\ 'typescriptreact': 'ctags -R',
+			\ 'typescript.tsx': 'ctags -R',
+      \ 'css': 'ctags -R',
+			\ 'scss': 'ctags -R',
+			\ 'sass': 'ctags -R',
+      \ 'clojure': 'ctags -R',
+      \ 'clojurescript': 'ctags -R',
 			\ }
 
 " To enable fzf's preview window set g:vista_fzf_preview.
@@ -639,76 +742,6 @@ nnoremap <leader>tO :Vista coc<cr>
 
 " toggle fuzzy in buffer tag finder
 nnoremap <space>ft :Vista finder coc<CR>
-
-Plug 'zefei/vim-wintabs'
-
-command! Tabc WintabsCloseVimtab
-command! Tabo WintabsOnlyVimtabs
-
-map [b <Plug>(wintabs_previous)
-map ]b <Plug>(wintabs_next)
-map <space>bc <Plug>(wintabs_close)
-map <space>bq :BCloseAll<cr>
-map <space>bu <Plug>(wintabs_undo)
-map <space>bo <Plug>(wintabs_only)
-map <space>wc <Plug>(wintabs_close_window)
-map <space>wo <Plug>(wintabs_only_window)
-
-nnoremap <space>bn :enew<CR>
-nnoremap <space>wn :tabnew<CR>
-nnoremap <space>wq :WintabsCloseVimtab<CR>
-nnoremap [w :tabprevious<cr>
-nnoremap ]w :tabnext<cr>
-
-Plug 'zefei/vim-wintabs-powerline'
-
-let g:wintabs_powerline_arrow_left = "\u25b6"
-
-" Left pointing arrow, used as previous buffers indicator.
-
-let g:wintabs_powerline_arrow_right = "\u25c0"
-
-" Right pointing arrow, used as next buffers indicator.
-
-let g:wintabs_powerline_sep_buffer_transition = "\ue0b0"
-
-" Separator between inactive and active buffers.
-
-let g:wintabs_powerline_sep_buffer = "\ue0b1"
-
-" Separator between inactive buffers.
-
-let g:wintabs_powerline_sep_tab_transition = "\ue0b2"
-
-" Separator between inactive and active vimtabs.
-
-let g:wintabs_powerline_sep_tab = "\ue0b3"
-
-" Separator between inactive vimtabs.
-
-highlight link WintabsEmpty TabLineFill
-
-" Highlight group for background.
-
-highlight link WintabsActive TabLineSel
-
-" Highlight group for active buffer/tab.
-
-highlight link WintabsInactive TabLineFill
-
-" Highlight group for inactive buffer/tab.
-
-highlight link WintabsArrow TabLine
-
-" Highlight group for arrows.
-
-highlight link WintabsActiveNC TabLine
-
-" Highlight group for active buffer/tab in not-current windows.
-
-highlight link WintabsInactiveNC TabLine
-
-" Highlight group for inactive buffer/tab in not-current windows.
 
 Plug 'wakatime/vim-wakatime'
 Plug 'easymotion/vim-easymotion'
@@ -788,11 +821,8 @@ endfunction
 
 let g:fzf_layout = { 'window': 'call OpenFloatingWin()' }
 
-command! -bang GitFilesInSubDirs call fzf#vim#files('-C ./', <bang>0)
-
 nnoremap <space>; :GFiles?<cr>
 nnoremap ; :GFiles --recurse-submodules<Cr>
-nnoremap <leader>; GitFilesInSubDirs<cr>
 nnoremap <space>fH :History<CR>
 nnoremap <space>fFf :Rg .<CR>
 
@@ -813,8 +843,8 @@ nnoremap <silent> <space>fK :AgIn ~/.manu-pages/md-detailled/<cr>
 
 nnoremap <silent> <space>fTb :CocCommand fzf-preview.BufferTags<cr>
 nnoremap <silent> <space>fl :CocCommand fzf-preview.Lines<cr>
+nnoremap <silent> <space>fb :CocCommand fzf-preview.Buffers<cr>
 nnoremap <silent> <space>fLb :CocCommand fzf-preview.BufferLines<cr>
-" nnoremap <silent> <space>fm :CocCommand fzf-preview.Marks<cr>
 nnoremap <silent> <space>fg :CocCommand fzf-preview.ProjectGrep .<cr>
 nnoremap <silent> <space>fd :CocCommand fzf-preview.CocCurrentDiagnostics<cr>
 nnoremap <silent> <space>fGs :CocCommand fzf-preview.GitStatus<cr>
@@ -848,7 +878,6 @@ vnoremap <silent> <space>lFr  :Farr<cr>
 
 Plug 'voldikss/vim-floaterm'
 
-autocmd User Startified setlocal buflisted
 hi FloatermBorder guibg=magenta guifg=cyan
 set shell=/bin/zsh
 
@@ -869,7 +898,6 @@ tnoremap ]t <c-\><c-n>:FloatermNext<cr>
 tnoremap [t <c-\><c-n>:FloatermPrev<cr>
 
 Plug 'HerringtonDarkholme/yats.vim'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 Plug 'roxma/vim-tmux-clipboard'
 Plug 'christoomey/vim-tmux-navigator'
@@ -945,9 +973,88 @@ let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
 
+" coc-git-status integration
+function! s:update_git_status()
+  let g:airline_section_b = "%{get(g:,'coc_git_status','')}"
+endfunction
+
+let g:airline_section_b = "%{get(g:,'coc_git_status','')}"
+
+autocmd User CocGitStatusChange call s:update_git_status()
+
 Plug 'vim-airline/vim-airline-themes'
 
-let g:airline_theme='kalisi'
+let g:airline_theme='molokai'
+
+Plug 'zefei/vim-wintabs'
+
+command! Tabc WintabsCloseVimtab
+command! Tabo WintabsOnlyVimtabs
+
+map [b <Plug>(wintabs_previous)
+map ]b <Plug>(wintabs_next)
+map <space>bc <Plug>(wintabs_close)
+map <space>bq :BCloseAll<cr>
+map <space>bu <Plug>(wintabs_undo)
+map <space>bo <Plug>(wintabs_only)
+map <space>wc <Plug>(wintabs_close_window)
+map <space>wo <Plug>(wintabs_only_window)
+
+nnoremap <space>bn :enew<CR>
+nnoremap <space>wn :tabnew<CR>
+nnoremap <space>wq :WintabsCloseVimtab<CR>
+nnoremap [w :tabprevious<cr>
+nnoremap ]w :tabnext<cr>
+
+Plug 'zefei/vim-wintabs-powerline'
+
+let g:wintabs_powerline_arrow_left = "\u25b6"
+
+" Left pointing arrow, used as previous buffers indicator.
+
+let g:wintabs_powerline_arrow_right = "\u25c0"
+
+" Right pointing arrow, used as next buffers indicator.
+
+let g:wintabs_powerline_sep_buffer_transition = "\ue0b0"
+
+" Separator between inactive and active buffers.
+
+let g:wintabs_powerline_sep_buffer = "\ue0b1"
+
+" Separator between inactive buffers.
+
+let g:wintabs_powerline_sep_tab_transition = "\ue0b2"
+
+" Separator between inactive and active vimtabs.
+
+let g:wintabs_powerline_sep_tab = "\ue0b3"
+
+" Separator between inactive vimtabs.
+
+highlight link WintabsEmpty TabLineFill
+
+" Highlight group for background.
+
+highlight link WintabsActive TabLineSel
+
+" Highlight group for active buffer/tab.
+
+highlight link WintabsInactive TabLineFill
+
+" Highlight group for inactive buffer/tab.
+
+highlight link WintabsArrow TabLine
+
+" Highlight group for arrows.
+
+highlight link WintabsActiveNC TabLine
+
+" Highlight group for active buffer/tab in not-current windows.
+
+highlight link WintabsInactiveNC TabLine
+
+" Highlight group for inactive buffer/tab in not-current windows.
 
 Plug 'ludovicchabant/vim-gutentags'
 
@@ -982,20 +1089,6 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
-
-" needs to be run but outside the plug-block
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-    disable = { "c", "rust" },  -- list of language that will be disabled
-  },
-}
-require'lspconfig'.pyright.setup{}
-require'lspconfig'.pyls.setup{on_attach=require'completion'.on_attach}
-require'fzf_lsp'.setup()
-EOF
 
 " useful functions
 " ----------------
@@ -1048,17 +1141,16 @@ else
   hi CursorLine cterm=NONE ctermbg=black ctermfg=white guibg=#E1B3D8
 endif
 
-set rtp+=/home/joehannes/.config/nvim/gitted/tabnine-vim
 set ruler
 set number relativenumber
-set guifont=FiraMono\ Nerd\ Font
+" set guifont=FiraCode\ Nerd\ Font\ Mono
 set tabline=%!contabs#integrations#tabline#create()
 
 set showtabline=2
 set laststatus=2
 
 " disable auto equalalways ... window dimenstions resizing auto off
-set noea
+" set noea
 
 set directory=/tmp
 set nobackup
@@ -1076,10 +1168,9 @@ set shortmess+=c
 set signcolumn=yes
 set mouse=a mousemodel=popup
 set tabstop=2 softtabstop=0 shiftwidth=2 expandtab
+set sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,options,globals,terminal,winpos,winsize"
 
 let g:Powerline_symbols = 'fancy'
-
-autocmd BufEnter * lua require'completion'.on_attach()
 
 " augroup Enter Buffer on Line where I left off
 autocmd BufReadPost *
@@ -1115,6 +1206,9 @@ augroup foldMethodSetLocal
   autocmd BufEnter,FocusGained,InsertLeave *.ts setlocal foldmethod=syntax
   autocmd BufEnter,FocusGained,InsertLeave *.jsx setlocal foldmethod=syntax
   autocmd BufEnter,FocusGained,InsertLeave *.tsx setlocal foldmethod=syntax
+  autocmd BufEnter,FocusGained,InsertLeave *.clj setlocal foldmethod=syntax
+  autocmd BufEnter,FocusGained,InsertLeave *.cljc setlocal foldmethod=syntax
+  autocmd BufEnter,FocusGained,InsertLeave *.cljs setlocal foldmethod=syntax
   autocmd BufEnter,FocusGained,InsertLeave *.json setlocal foldmethod=indent
 augroup END
 
@@ -1131,4 +1225,109 @@ nnoremap <silent> <space>L :call WinMove('l')<CR>
 nnoremap <leader><leader>, :edit ~/.local/git/joehannes-os/dotfiles/.config/nvim/init.vim<cr>
 nnoremap <leader><leader>. :edit ~/.local/git/joehannes-os/dotfiles/.config/nvim/coc-settings.json<cr>
 
-" lua require'init'
+" lua <<EOF
+" require'lspconfig'.clojure_lsp.setup{}
+" require'nvim-treesitter.configs'.setup {
+"   ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+"   highlight = {
+"     enable = true,              -- false will disable the whole extension
+"     disable = { "c", "rust" },  -- list of language that will be disabled
+"   },
+" }
+" -- require'lspconfig'.pyright.setup{}
+" -- require'lspconfig'.pyls.setup{on_attach=require'completion'.on_attach}
+" require'fzf_lsp'.setup()
+" -- commented options are defaults
+" require'lspkind'.init{
+"     -- with_text = true,
+"     -- symbol_map = {
+"     --   Text = '',
+"     --   Method = 'ƒ',
+"     --   Function = '',
+"     --   Constructor = '',
+"     --   Variable = '',
+"     --   Class = '',
+"     --   Interface = 'ﰮ',
+"     --   Module = '',
+"     --   Property = '',
+"     --   Unit = '',
+"     --   Value = '',
+"     --   Enum = '了',
+"     --   Keyword = '',
+"     --   Snippet = '﬌',
+"     --   Color = '',
+"     --   File = '',
+"     --   Folder = '',
+"     --   EnumMember = '',
+"     --   Constant = '',
+"     --   Struct = ''
+"     -- },
+" }
+" require'nvim-lightbulb'.update_lightbulb {
+"     sign = {
+"         enabled = true,
+"         -- Priority of the gutter sign
+"         priority = 10,
+"     },
+"     float = {
+"         enabled = true,
+"         -- Text to show in the popup float
+"         text = "💡",
+"         -- Available keys for window options:
+"         -- - height     of floating window
+"         -- - width      of floating window
+"         -- - wrap_at    character to wrap at for computing height
+"         -- - max_width  maximal width of floating window
+"         -- - max_height maximal height of floating window
+"         -- - pad_left   number of columns to pad contents at left
+"         -- - pad_right  number of columns to pad contents at right
+"         -- - pad_top    number of lines to pad contents at top
+"         -- - pad_bottom number of lines to pad contents at bottom
+"         -- - offset_x   x-axis offset of the floating window
+"         -- - offset_y   y-axis offset of the floating window
+"         -- - anchor     corner of float to place at the cursor (NW, NE, SW, SE)
+"         -- - winblend   transparency of the window (0-100)
+"         win_opts = {},
+"     },
+"     virtual_text = {
+"         enabled = false,
+"         -- Text to show at virtual text
+"         text = "💡",
+"     }
+" }
+" require('lspfuzzy').setup {
+"   methods = 'all',         -- either 'all' or a list of LSP methods (see below)
+"   fzf_preview = {          -- arguments to the FZF '--preview-window' option
+"     'right:+{2}-/2'          -- preview on the right and centered on entry
+"   },
+"   fzf_action = {           -- FZF actions
+"     ['ctrl-t'] = 'tabedit',  -- go to location in a new tab
+"     ['ctrl-v'] = 'vsplit',   -- go to location in a vertical split
+"     ['ctrl-x'] = 'split',    -- go to location in a horizontal split
+"   },
+"   fzf_modifier = ':~:.',   -- format FZF entries, see |filename-modifiers|
+"   fzf_trim = true,         -- trim FZF entries
+" }
+" require'lsp_signature'.on_attach()
+" require'navigator'.setup()
+" require('bqf').setup({
+"     auto_enable = true,
+"     preview = {
+"         win_height = 12,
+"         win_vheight = 12,
+"         delay_syntax = 80,
+"         border_chars = {'┃', '┃', '━', '━', '┏', '┓', '┗', '┛', '█'}
+"     },
+"     func_map = {
+"         vsplit = '',
+"         ptogglemode = 'z,',
+"         stoggleup = ''
+"     },
+"     filter = {
+"         fzf = {
+"             action_for = {['ctrl-s'] = 'split'},
+"             extra_opts = {'--bind', 'ctrl-o:toggle-all', '--prompt', '> '}
+"         }
+"     }
+" })
+" EOF

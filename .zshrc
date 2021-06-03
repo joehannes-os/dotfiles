@@ -22,8 +22,7 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/default/Contents/Home
 export GEMPATH=/Users/joehannes/.gem/ruby/latest
 
 # If you come from bash you might have to change your $PATH.
-export PATH=/home/linuxbrew/.linuxbrew/bin:$HOME/.local/bin:/usr/local/bin:$HOME/.cargo/bin:$JAVA_HOME/bin:$GEMPATH/bin:$GOPATH/bin:/Users/joehannes/Library/Python/3.9/bin:$PATH
-export FPATH=/home/linuxbrew/.linuxbrew/share/zsh/site-functions:$FPATH
+export PATH=$HOME/.local/bin:/usr/local/bin:$HOME/.cargo/bin:$JAVA_HOME/bin:$GEMPATH/bin:$GOPATH/bin:/Users/joehannes/Library/Python/3.9/bin:$PATH
 if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
   export FPATH=/usr/local/share/zsh/site-functions:$FPATH
 fi
@@ -33,6 +32,9 @@ export ZSH=/Users/joehannes/.oh-my-zsh
 
 # Wakatime
 export ZSH_WAKATIME_PROJECT_DETECTION=true
+
+# Secrets
+source ~/.local/git/joehannes-os/safe/.secrets.env
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -135,6 +137,10 @@ alias ohmymux="txs regular"
 alias ohmymutt="nvim ~/.neomuttrc"
 alias chrome="$(which google-chrome-stable) --remote-debugging-port=9222"
 alias hack="/home/linuxbrew/.linuxbrew/bin/nvim"
+alias cljrepl="clj -Sdeps '{:deps {nrepl {:mvn/version \"0.7.0\"} cider/cider-nrepl {:mvn/version \"0.25.2\"}}}' \
+                -m nrepl.cmdline \
+                --middleware '[\"cider.nrepl/cider-middleware\"]' \
+                --interactive"
 
 txq() {
 	tmuxinator stop $1;

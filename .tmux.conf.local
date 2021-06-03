@@ -346,7 +346,7 @@ set -g prefix C-a
 bind C-a send-prefix
 #
 # start selection with 'space' and copy using 'y'
-bind -t vi-copy 'y' copy-selection
+# bind -t vi-copy 'y' copy-selection
 
 # paste using 'p'
 unbind p
@@ -356,6 +356,7 @@ bind p paste-buffer
 set -g status-position top
 set-option -g status-position top
 set-window-option -g status-position top
+set -g status-justify centre
 
 # reload config file
 bind r source-file ~/.tmux.conf \; display ".tmux.conf reloaded!"
