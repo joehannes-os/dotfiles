@@ -10,8 +10,7 @@ endif
 
 call plug#begin()
 
-Plug 'eraserhd/parinfer-rust', {'do': 'cargo build --release'}
-
+" Storybook mdx syntax highlighting
 Plug 'jxnblk/vim-mdx-js'
 
 " included as coc-plugin
@@ -174,6 +173,7 @@ let g:ale_linters = {
 " Structural editing for lisp languages
 Plug 'guns/vim-sexp'
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
+Plug 'eraserhd/parinfer-rust', {'do': 'cargo build --release'}
 Plug 'kien/rainbow_parentheses.vim'
 
 au VimEnter * RainbowParenthesesToggle
@@ -213,7 +213,7 @@ nnoremap <space>r$ :call VrcQuery()<CR>
 
 Plug 'Konfekt/Fastfold'
 
-nmap <space>z <Plug>(FastFoldUpdate)
+nmap <space>zu <Plug>(FastFoldUpdate)
 let g:fastfold_minlines = 50
 let g:fastfold_savehook = 1
 let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
@@ -265,6 +265,7 @@ nnoremap <leader>H <C-w>\<>
 
 let g:goyo_width='80%'
 
+Plug 'sainnhe/sonokai'
 Plug 'patstockwell/vim-monokai-tasty'
 
 let g:vim_monokai_tasty_italic = 1
@@ -297,7 +298,7 @@ hi link illuminatedWord Visual
 Plug 'nightsense/night-and-day'
 
 let g:nd_themes = [
-  \ ['sunrise+0', 'space_vim_theme', 'dark' ],
+  \ ['sunrise+0', 'sonokai', 'sushia' ],
   \ ['sunset+0', 'vim-monokai-tasty', '' ],
 \ ]
 
@@ -401,9 +402,10 @@ nmap <space>t<> <Plug>MarkdownPreviewToggle
 nmap <space><> <Plug>MarkdownPreview
 nmap <space>q<> <Plug>MarkdownPreviewStop
 
-Plug 'frazrepo/vim-rainbow'
-
-let g:rainbow_active = 1
+" already got a rainbow parens plugin
+" Plug 'frazrepo/vim-rainbow'
+"
+" let g:rainbow_active = 1
 
 Plug 'SirVer/ultisnips'
 
@@ -638,7 +640,7 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <c-TAB>
+inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()

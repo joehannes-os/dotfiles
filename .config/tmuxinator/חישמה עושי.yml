@@ -1,7 +1,7 @@
 # /home/joehannes/.config/tmuxinator/regular.yml
 
 name: "חישמה עושי"
-root: ~/.local/git
+root: ~/.local/git/united-signals/nc-platform
 
 # Optional tmux socket
 # socket_name: foo
@@ -25,7 +25,7 @@ root: ~/.local/git
 # pre_window: rbenv shell 2.0.0-p247
 
 # Pass command line options to tmux. Useful for specifying a different tmux.conf.
-# tmux_options: -f ~/.tmux.mac.conf
+tmux_options: -f ~/.tmux.conf
 
 # Change the command to call tmux.  This can be used by derivatives/wrappers like byobu.
 # tmux_command: byobu
@@ -43,13 +43,12 @@ windows:
   - ps: bpytop
   - cli: votd
   - editor: nvim
-  - tasks:
+  - server:
       layout: main-vertical
       panes:
-        - while true; do task list; sleep 60s; done
-        - tasksh
-        - while true; do timew summary; sleep 60s; done
-        - while true; do timew week; sleep 60s; done
+        - lein run dev
+        - lein shadow watch app
+  - git: tig
       # layout: main-vertical
       # Synchronize all panes of this window, can be enabled before or after the pane commands run.
       # 'before' represents legacy functionality and will be deprecated in a future release, in favour of 'after'

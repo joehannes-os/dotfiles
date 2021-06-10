@@ -225,3 +225,5 @@ zplug "b4b4r07/zsh-vimode-visual", defer:3
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 [ -f /Users/joehannes/.config/cani/completions/_cani.zsh ] && source /Users/joehannes/.config/cani/completions/_cani.zsh
+
+alias luamake=/Users/joehannes/.config/nvim/lua-language-server/3rd/luamake/luamake
